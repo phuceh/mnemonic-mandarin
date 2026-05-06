@@ -16,7 +16,7 @@ type Word = {
   audio_url: string
 }
 
-const TONE_COLORS = ['#378ADD', '#1D9E75', '#D85A30', '#D4537E']
+const TONE_COLORS = ['#c0392b', '#8e6a3a', '#2c7a4b', '#1a5a8a']
 
 export default function Home() {
   const [words, setWords] = useState<Word[]>([])
@@ -61,9 +61,7 @@ export default function Home() {
 
   function saveWord() {
     const word = words[current]
-    if (!saved.find(w => w.id === word.id)) {
-      setSaved([...saved, word])
-    }
+    if (!saved.find(w => w.id === word.id)) setSaved([...saved, word])
   }
 
   function removeWord(id: number) {
@@ -78,150 +76,190 @@ export default function Home() {
   const word = words[current]
   const isSaved = word && saved.find(w => w.id === word.id)
 
+  const menuBtn: React.CSSProperties = {
+    padding: '8px 16px', borderRadius: 6, border: '1px solid',
+    cursor: 'pointer', fontSize: 14, textAlign: 'left' as const,
+    fontFamily: 'Georgia, serif', width: '100%', marginBottom: 4,
+    transition: 'all 0.15s',
+  }
+
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Georgia, serif' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f7f3ee' }}>
 
       {menuOpen && (
         <div onClick={() => setMenuOpen(false)} style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 10
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10
         }} />
       )}
 
+      {/* Side menu */}
       <div style={{
-        position: 'fixed', top: 0, left: 0, height: '100vh', width: 240,
-        background: '#fff', borderRight: '1px solid #eee', zIndex: 20,
+        position: 'fixed', top: 0, left: 0, height: '100vh', width: 256,
+        background: '#fdf8f2', borderRight: '1px solid #e8ddd0', zIndex: 20,
         transform: menuOpen ? 'translateX(0)' : 'translateX(-100%)',
         transition: 'transform 0.25s ease', padding: '2rem 1.5rem',
-        display: 'flex', flexDirection: 'column', gap: '0.5rem',
-        overflowY: 'auto'
+        display: 'flex', flexDirection: 'column', overflowY: 'auto'
       }}>
-        <div style={{ fontSize: 20, fontWeight: 700, marginBottom: '1.5rem' }}>记 · Remember</div>
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ fontSize: 22, fontWeight: 700, color: '#2d1810', fontFamily: 'Georgia, serif' }}>记 · Remember</div>
+          <div style={{ fontSize: 11, color: '#c0392b', letterSpacing: 3, marginTop: 2 }}>普通话词汇助手</div>
+        </div>
 
-        <div style={{ fontSize: 11, letterSpacing: 2, color: '#bbb', marginBottom: 8, textTransform: 'uppercase' }}>HSK Level</div>
+        <div style={{ fontSize: 10, letterSpacing: 2, color: '#b08060', marginBottom: 10, textTransform: 'uppercase' }}>HSK Level</div>
         {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => (
           <button key={level} onClick={() => { setHskLevel(level); setMenuOpen(false) }} style={{
-            padding: '8px 14px', borderRadius: 8, border: '1px solid',
-            borderColor: hskLevel === level ? '#333' : '#eee',
-            background: hskLevel === level ? '#333' : 'transparent',
-            color: hskLevel === level ? '#fff' : '#555',
-            cursor: 'pointer', fontSize: 14, textAlign: 'left',
-            fontFamily: 'Georgia, serif'
+            ...menuBtn,
+            borderColor: hskLevel === level ? '#c0392b' : '#e8ddd0',
+            background: hskLevel === level ? '#c0392b' : 'transparent',
+            color: hskLevel === level ? '#fff' : '#5a3a2a',
           }}>
             {level === 'all' ? 'All words' : `HSK ${level}`}
           </button>
         ))}
 
-        <div style={{ fontSize: 11, letterSpacing: 2, color: '#bbb', margin: '1.5rem 0 8px', textTransform: 'uppercase' }}>My Words</div>
+        <div style={{ fontSize: 10, letterSpacing: 2, color: '#b08060', margin: '1.5rem 0 10px', textTransform: 'uppercase' }}>My Words</div>
         <button onClick={() => { setHskLevel('saved'); setMenuOpen(false) }} style={{
-          padding: '8px 14px', borderRadius: 8, border: '1px solid',
-          borderColor: hskLevel === 'saved' ? '#333' : '#eee',
-          background: hskLevel === 'saved' ? '#333' : 'transparent',
-          color: hskLevel === 'saved' ? '#fff' : '#555',
-          cursor: 'pointer', fontSize: 14, textAlign: 'left',
-          fontFamily: 'Georgia, serif'
+          ...menuBtn,
+          borderColor: hskLevel === 'saved' ? '#c0392b' : '#e8ddd0',
+          background: hskLevel === 'saved' ? '#c0392b' : 'transparent',
+          color: hskLevel === 'saved' ? '#fff' : '#5a3a2a',
         }}>
           Saved words {saved.length > 0 && `(${saved.length})`}
         </button>
 
         {hskLevel === 'saved' && saved.length > 0 && (
-          <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div style={{ marginTop: 8 }}>
             {saved.map(w => (
-              <div key={w.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 8px', fontSize: 14 }}>
-                <span style={{ fontSize: 18 }}>{w.chinese}</span>
-                <button onClick={() => removeWord(w.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#bbb', fontSize: 16 }}>×</button>
+              <div key={w.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 4px', borderBottom: '1px solid #e8ddd0' }}>
+                <span style={{ fontSize: 20, color: '#2d1810' }}>{w.chinese}</span>
+                <span style={{ fontSize: 12, color: '#b08060', flex: 1, marginLeft: 8 }}>{w.english}</span>
+                <button onClick={() => removeWord(w.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#c0392b', fontSize: 16 }}>×</button>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      <main style={{ flex: 1, maxWidth: 560, margin: '0 auto', padding: '2rem 1rem' }}>
+      {/* Main */}
+      <main style={{ flex: 1, maxWidth: 580, margin: '0 auto', padding: '2rem 1.5rem' }}>
 
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2rem' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem' }}>
           <button onClick={() => setMenuOpen(true)} style={{
-            background: 'none', border: 'none', cursor: 'pointer', fontSize: 22, padding: '4px 8px', color: '#333'
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontSize: 20, color: '#5a3a2a', padding: '4px 8px 4px 0'
           }}>☰</button>
           <div style={{ flex: 1, textAlign: 'center' }}>
-            <h1 style={{ fontSize: 26, fontWeight: 700 }}>记 · Remember</h1>
-            <p style={{ color: '#888', fontSize: 13, letterSpacing: 3 }}>普通话词汇助手</p>
+            <h1 style={{ fontSize: 28, fontWeight: 700, color: '#2d1810', fontFamily: 'Georgia, serif', letterSpacing: '-0.5px' }}>记 · Remember</h1>
+            <div style={{ fontSize: 11, color: '#c0392b', letterSpacing: 4, marginTop: 2 }}>普通话词汇助手</div>
           </div>
-          <div style={{ width: 40 }} />
+          <div style={{ width: 36 }} />
         </div>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '3rem', color: '#888' }}>Loading...</div>
+          <div style={{ textAlign: 'center', padding: '4rem', color: '#b08060' }}>Loading...</div>
         ) : words.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '3rem', color: '#888' }}>
+          <div style={{ textAlign: 'center', padding: '4rem', color: '#b08060' }}>
             {hskLevel === 'saved' ? 'No saved words yet.' : 'No words found.'}
           </div>
         ) : word ? (
           <>
+            {/* Card */}
             <div onClick={() => setFlipped(!flipped)} style={{
-              background: '#fff', border: '1px solid #eee', borderRadius: 16,
-              padding: '2rem 1.5rem', marginBottom: '1rem', cursor: 'pointer',
-              minHeight: 300, transition: 'box-shadow 0.2s',
-              boxShadow: flipped ? '0 4px 24px rgba(0,0,0,0.08)' : '0 1px 4px rgba(0,0,0,0.04)'
+              background: '#fffdf8',
+              border: '1px solid #e8ddd0',
+              borderTop: '3px solid #c0392b',
+              borderRadius: 12,
+              padding: '2.5rem 2rem',
+              marginBottom: '1rem',
+              cursor: 'pointer',
+              minHeight: 320,
+              transition: 'box-shadow 0.2s',
+              boxShadow: flipped ? '0 8px 32px rgba(192,57,43,0.08)' : '0 2px 8px rgba(0,0,0,0.04)'
             }}>
+              {/* Top tag row */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ fontSize: 10, letterSpacing: 2, color: '#c0392b', textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>
+                  HSK {word.hsk_level}
+                </div>
+                <div style={{
+                  fontSize: 10, letterSpacing: 1, color: '#b08060',
+                  textTransform: 'uppercase', background: '#f5ede4',
+                  padding: '3px 10px', borderRadius: 4
+                }}>
+                  {word.topic}
+                </div>
+              </div>
 
-              <div style={{ textAlign: 'center', marginBottom: flipped ? '1.5rem' : '0' }}>
-                <div style={{ fontSize: 64, fontWeight: 700, lineHeight: 1, marginBottom: 10 }}>{word.chinese}</div>
-                <div style={{ fontSize: 22, color: '#555', marginBottom: 6, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{word.pinyin}</div>
-                <div style={{ fontSize: 16, color: '#999', marginBottom: 8 }}>{word.english}</div>
-                <div style={{ fontSize: 11, color: '#ccc', letterSpacing: 1, marginBottom: 12 }}>HSK {word.hsk_level}</div>
-
+              {/* Word */}
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ fontSize: 72, fontWeight: 700, color: '#2d1810', lineHeight: 1, marginBottom: 12, fontFamily: 'serif' }}>{word.chinese}</div>
+                <div style={{ fontSize: 22, color: '#8b5a3a', marginBottom: 6, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{word.pinyin}</div>
+                <div style={{ fontSize: 16, color: '#b08060', letterSpacing: 1, marginBottom: 16, textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>{word.english}</div>
                 {word.audio_url && (
-                  <button
-                    onClick={(e) => playAudio(word.audio_url, e)}
-                    style={{
-                      padding: '8px 20px', borderRadius: 20,
-                      border: '1px solid #ddd', background: 'transparent',
-                      cursor: 'pointer', fontSize: 13, color: '#666',
-                      fontFamily: 'Georgia, serif'
-                    }}>
-                    🔊 Listen
-                  </button>
+                  <button onClick={(e) => playAudio(word.audio_url, e)} style={{
+                    padding: '7px 20px', borderRadius: 24,
+                    border: '1px solid #e8ddd0', background: '#fff',
+                    cursor: 'pointer', fontSize: 13, color: '#8b5a3a',
+                    fontFamily: 'Georgia, serif'
+                  }}>🔊 Listen</button>
                 )}
               </div>
 
-              {flipped && (
+              {/* Mnemonic */}
+              {flipped ? (
                 <>
-                  <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '1.25rem 0' }} />
-                  <div style={{ fontSize: 11, letterSpacing: 2, color: '#bbb', marginBottom: 8, textTransform: 'uppercase' }}>Mnemonic</div>
-                  <div style={{ fontSize: 15, lineHeight: 1.7, marginBottom: '1rem' }}>{word.mnemonic}</div>
-                  <div style={{ fontSize: 40, textAlign: 'center', padding: '1rem', background: '#f9f9f9', borderRadius: 8 }}>{word.scene_emoji}</div>
-                  {word.syllables && (
-                    <div style={{ display: 'flex', gap: 8, marginTop: '1rem' }}>
-                      {word.syllables.map((s, i) => (
-                        <div key={i} style={{ flex: 1, padding: '10px 12px', border: '1px solid #eee', borderRadius: 8, textAlign: 'center' }}>
-                          <div style={{ fontSize: 20, fontWeight: 700 }}>{s.zh}</div>
-                          <div style={{ fontSize: 13, color: '#888', fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{s.pinyin}</div>
-                          <div style={{ fontSize: 12, fontWeight: 500, color: TONE_COLORS[s.tone - 1] }}>"{s.sound_hook}"</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <div style={{ borderTop: '1px solid #e8ddd0', paddingTop: '1.5rem' }}>
+                    <div style={{ fontSize: 10, letterSpacing: 2, color: '#c0392b', marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
+                    <div style={{ fontSize: 15, lineHeight: 1.8, color: '#3d2010', marginBottom: '1.25rem' }}>{word.mnemonic}</div>
+                    <div style={{ fontSize: 44, textAlign: 'center', padding: '1.25rem', background: '#f5ede4', borderRadius: 8 }}>{word.scene_emoji}</div>
+                    {word.syllables && word.syllables.length > 0 && (
+                      <div style={{ display: 'flex', gap: 8, marginTop: '1rem' }}>
+                        {word.syllables.map((s, i) => (
+                          <div key={i} style={{ flex: 1, padding: '10px 12px', border: '1px solid #e8ddd0', borderRadius: 8, textAlign: 'center', background: '#fff' }}>
+                            <div style={{ fontSize: 22, fontWeight: 700, color: '#2d1810', fontFamily: 'serif' }}>{s.zh}</div>
+                            <div style={{ fontSize: 13, color: '#8b5a3a', fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{s.pinyin}</div>
+                            <div style={{ fontSize: 12, fontWeight: 600, color: TONE_COLORS[s.tone - 1] }}>"{s.sound_hook}"</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </>
-              )}
-              {!flipped && (
-                <div style={{ marginTop: '1.5rem', fontSize: 13, color: '#bbb', textAlign: 'center' }}>tap to reveal mnemonic</div>
+              ) : (
+                <div style={{ textAlign: 'center', fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '1rem' }}>
+                  tap to reveal mnemonic
+                </div>
               )}
             </div>
 
+            {/* Controls */}
             <div style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
-              <button onClick={prev} style={{ flex: 1, height: 44, borderRadius: 10, border: '1px solid #ddd', background: 'transparent', cursor: 'pointer', fontSize: 18 }}>←</button>
+              <button onClick={prev} style={{
+                flex: 1, height: 48, borderRadius: 8,
+                border: '1px solid #e8ddd0', background: '#fffdf8',
+                cursor: 'pointer', fontSize: 20, color: '#5a3a2a'
+              }}>←</button>
               <button onClick={saveWord} style={{
-                flex: 2, height: 44, borderRadius: 10, border: '1px solid #ddd',
-                background: isSaved ? '#f0faf5' : 'transparent',
+                flex: 2, height: 48, borderRadius: 8,
+                border: `1px solid ${isSaved ? '#c0392b' : '#e8ddd0'}`,
+                background: isSaved ? '#fdf0ee' : '#fffdf8',
                 cursor: 'pointer', fontSize: 13,
-                color: isSaved ? '#1D9E75' : '#666',
+                color: isSaved ? '#c0392b' : '#5a3a2a',
                 fontFamily: 'Georgia, serif'
               }}>
                 {isSaved ? 'Saved ✓' : 'Save word'}
               </button>
-              <button onClick={next} style={{ flex: 1, height: 44, borderRadius: 10, border: '1px solid #ddd', background: 'transparent', cursor: 'pointer', fontSize: 18 }}>→</button>
+              <button onClick={next} style={{
+                flex: 1, height: 48, borderRadius: 8,
+                border: '1px solid #e8ddd0', background: '#fffdf8',
+                cursor: 'pointer', fontSize: 20, color: '#5a3a2a'
+              }}>→</button>
             </div>
 
-            <div style={{ textAlign: 'center', fontSize: 13, color: '#bbb' }}>{current + 1} / {words.length}</div>
+            <div style={{ textAlign: 'center', fontSize: 12, color: '#c8a888', letterSpacing: 1 }}>
+              {current + 1} / {words.length}
+            </div>
           </>
         ) : null}
       </main>
