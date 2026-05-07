@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
+import type { User } from '@supabase/supabase-js'
 
 type Syllable = { zh: string; pinyin: string; tone: number; sound_hook: string }
 type Word = {
@@ -19,16 +21,18 @@ type Word = {
 const TONE_COLORS = ['#c0392b', '#8e6a3a', '#2c7a4b', '#1a5a8a']
 
 export default function Home() {
+  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
   const [words, setWords] = useState<Word[]>([])
   const [mode, setMode] = useState<'learn' | 'quiz' | 'home'>('home')
-
   const [current, setCurrent] = useState(0)
   const [flipped, setFlipped] = useState(false)
   const [saved, setSaved] = useState<Word[]>([])
   const [hskLevel, setHskLevel] = useState<any>('all')
   const [menuOpen, setMenuOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-
+  const [learned, setLearned] = useState<Set<number>>(new Set())
+  const [progress, setProgress] = useState<Record<number, { learned: number, total: number }>>({})
   const [quizLevel, setQuizLevel] = useState<any>('all')
   const [quizWords, setQuizWords] = useState<Word[]>([])
   const [quizIndex, setQuizIndex] = useState(0)
@@ -39,11 +43,21 @@ export default function Home() {
   const [quizLoading, setQuizLoading] = useState(false)
 
   useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    supabase.auth.onAuthStateChange((_, session) => setUser(session?.user ?? null))
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      fetchLearned()
+      fetchProgress()
+    }
+  }, [user])
+
+  useEffect(() => {
     if (mode === 'learn') {
       if (hskLevel === 'saved') {
-        setWords(saved)
-        setCurrent(0)
-        setFlipped(false)
+        setWords(saved); setCurrent(0); setFlipped(false)
       } else {
         fetchWords()
       }
@@ -56,9 +70,34 @@ export default function Home() {
     if (hskLevel !== 'all') query = query.eq('hsk_level', hskLevel)
     const { data } = await query
     setWords(data || [])
-    setCurrent(0)
-    setFlipped(false)
-    setLoading(false)
+    setCurrent(0); setFlipped(false); setLoading(false)
+  }
+
+  async function fetchLearned() {
+    if (!user) return
+    const { data } = await supabase.from('progress').select('vocabulary_id').eq('user_id', user.id).eq('learned', true)
+    setLearned(new Set((data || []).map(r => r.vocabulary_id)))
+  }
+
+  async function fetchProgress() {
+    if (!user) return
+    const { data: allWords } = await supabase.from('vocabulary').select('id, hsk_level')
+    const { data: learnedData } = await supabase.from('progress').select('vocabulary_id').eq('user_id', user.id).eq('learned', true)
+    const learnedIds = new Set((learnedData || []).map(r => r.vocabulary_id))
+    const prog: Record<number, { learned: number, total: number }> = {}
+    for (let lvl = 1; lvl <= 6; lvl++) {
+      const levelWords = (allWords || []).filter(w => w.hsk_level === lvl)
+      prog[lvl] = { learned: levelWords.filter(w => learnedIds.has(w.id)).length, total: levelWords.length }
+    }
+    setProgress(prog)
+  }
+
+  async function markLearned() {
+    const word = words[current]
+    if (!user || !word) return
+    await supabase.from('progress').upsert({ user_id: user.id, vocabulary_id: word.id, learned: true, last_seen: new Date().toISOString() }, { onConflict: 'user_id,vocabulary_id' })
+    setLearned(prev => new Set([...prev, word.id]))
+    fetchProgress()
   }
 
   async function startQuiz() {
@@ -67,82 +106,92 @@ export default function Home() {
     if (quizLevel !== 'all') query = query.eq('hsk_level', quizLevel)
     const { data } = await query
     const shuffled = (data || []).sort(() => Math.random() - 0.5)
-    setQuizWords(shuffled)
-    setQuizIndex(0)
-    setScore(0)
-    setStreak(0)
-    setSelected(null)
+    setQuizWords(shuffled); setQuizIndex(0); setScore(0); setStreak(0); setSelected(null)
     generateOptions(shuffled[0], data || [])
-    setQuizLoading(false)
-    setMode('quiz')
+    setQuizLoading(false); setMode('quiz')
   }
 
   function generateOptions(word: Word, pool: Word[]) {
-    const wrong = pool
-      .filter(w => w.id !== word.id)
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 3)
-      .map(w => w.english)
-    const all = [...wrong, word.english].sort(() => Math.random() - 0.5)
-    setOptions(all)
+    const wrong = pool.filter(w => w.id !== word.id).sort(() => Math.random() - 0.5).slice(0, 3).map(w => w.english)
+    setOptions([...wrong, word.english].sort(() => Math.random() - 0.5))
   }
 
   function handleAnswer(answer: string) {
     if (selected) return
     setSelected(answer)
-    const correct = answer === quizWords[quizIndex].english
-    if (correct) {
-      setScore(s => s + 1)
-      setStreak(s => s + 1)
-    } else {
-      setStreak(0)
-    }
+    if (answer === quizWords[quizIndex].english) { setScore(s => s + 1); setStreak(s => s + 1) }
+    else setStreak(0)
   }
 
   function nextQuestion() {
     const next = quizIndex + 1
-    if (next >= quizWords.length) {
-      setMode('home')
-      return
-    }
-    setQuizIndex(next)
-    setSelected(null)
+    if (next >= quizWords.length) { setMode('home'); return }
+    setQuizIndex(next); setSelected(null)
     generateOptions(quizWords[next], quizWords)
   }
 
   function next() { setFlipped(false); setTimeout(() => setCurrent(i => (i + 1) % words.length), 150) }
   function prev() { setFlipped(false); setTimeout(() => setCurrent(i => (i - 1 + words.length) % words.length), 150) }
-  function saveWord() {
-    const word = words[current]
-    if (!saved.find(w => w.id === word.id)) setSaved([...saved, word])
-  }
+  function saveWord() { const word = words[current]; if (!saved.find(w => w.id === word.id)) setSaved([...saved, word]) }
   function removeWord(id: number) { setSaved(saved.filter(w => w.id !== id)) }
   function playAudio(url: string, e: React.MouseEvent) { e.stopPropagation(); new Audio(url).play() }
 
   const word = words[current]
   const isSaved = word && saved.find(w => w.id === word.id)
+  const isLearned = word && learned.has(word.id)
   const quizWord = quizWords[quizIndex]
 
   const menuBtn: React.CSSProperties = {
     padding: '8px 16px', borderRadius: 6, border: '1px solid',
     cursor: 'pointer', fontSize: 14, textAlign: 'left' as const,
     fontFamily: 'Georgia, serif', width: '100%', marginBottom: 4,
-    transition: 'all 0.15s',
   }
 
   const s = {
     bg: '#f7f3ee', card: '#fffdf8', border: '#e8ddd0',
     red: '#c0392b', brown: '#5a3a2a', lightbrown: '#b08060',
-    text: '#2d1810', muted: '#8b5a3a'
+    text: '#2d1810', muted: '#8b5a3a', green: '#2c7a4b'
   }
 
+  // HOME
   if (mode === 'home') return (
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+
+      {/* Auth button */}
+      <div style={{ position: 'absolute' as const, top: 20, right: 20 }}>
+        {user ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 12, color: s.lightbrown, fontFamily: 'Georgia, serif' }}>{user.email}</span>
+            <button onClick={() => supabase.auth.signOut()} style={{ fontSize: 12, color: s.muted, background: 'none', border: `1px solid ${s.border}`, borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign out</button>
+          </div>
+        ) : (
+          <button onClick={() => router.push('/auth')} style={{ fontSize: 13, color: s.brown, background: s.card, border: `1px solid ${s.border}`, borderRadius: 6, padding: '6px 14px', cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign in</button>
+        )}
+      </div>
+
+      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <div style={{ fontSize: 11, color: s.red, letterSpacing: 4, marginBottom: 8 }}>普通话词汇助手</div>
         <h1 style={{ fontSize: 42, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', letterSpacing: '-1px', marginBottom: 8 }}>记 · Remember</h1>
         <p style={{ fontSize: 15, color: s.muted, fontFamily: 'Georgia, serif' }}>Mandarin vocabulary with mnemonics</p>
       </div>
+
+      {/* Progress bars */}
+      {user && Object.keys(progress).length > 0 && (
+        <div style={{ width: '100%', maxWidth: 480, marginBottom: '2rem' }}>
+          <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Your progress</div>
+          {[1, 2, 3, 4, 5, 6].map(lvl => progress[lvl]?.total > 0 && (
+            <div key={lvl} style={{ marginBottom: 10 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                <span style={{ fontSize: 12, color: s.brown, fontFamily: 'Georgia, serif' }}>HSK {lvl}</span>
+                <span style={{ fontSize: 12, color: s.lightbrown, fontFamily: 'Georgia, serif' }}>{progress[lvl].learned} / {progress[lvl].total}</span>
+              </div>
+              <div style={{ height: 6, background: s.border, borderRadius: 3 }}>
+                <div style={{ height: '100%', background: s.green, borderRadius: 3, width: `${(progress[lvl].learned / progress[lvl].total) * 100}%`, transition: 'width 0.5s' }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: 16, width: '100%', maxWidth: 480 }}>
         <button onClick={() => { setMode('learn'); fetchWords() }} style={{
@@ -182,16 +231,15 @@ export default function Home() {
     </div>
   )
 
+  // QUIZ SETUP
   if (mode === ('quiz' as any) && quizWords.length === 0) return (
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
       <button onClick={() => setMode('home')} style={{ position: 'absolute' as const, top: 24, left: 24, background: 'none', border: 'none', cursor: 'pointer', color: s.muted, fontSize: 14, fontFamily: 'Georgia, serif' }}>← Back</button>
-
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{ fontSize: 32, marginBottom: 12 }}>🧠</div>
         <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 8 }}>Quiz</h2>
         <p style={{ fontSize: 14, color: s.muted, fontFamily: 'Georgia, serif' }}>Choose your level and test yourself</p>
       </div>
-
       <div style={{ width: '100%', maxWidth: 400 }}>
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Select level</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
@@ -207,12 +255,10 @@ export default function Home() {
             </button>
           ))}
         </div>
-
         <button onClick={startQuiz} disabled={quizLoading} style={{
           width: '100%', padding: '14px', borderRadius: 10,
           background: s.red, border: 'none', color: '#fff',
-          fontSize: 16, fontFamily: 'Georgia, serif', cursor: 'pointer',
-          fontWeight: 700
+          fontSize: 16, fontFamily: 'Georgia, serif', cursor: 'pointer', fontWeight: 700
         }}>
           {quizLoading ? 'Loading...' : 'Start Quiz →'}
         </button>
@@ -220,9 +266,9 @@ export default function Home() {
     </div>
   )
 
+  // QUIZ QUESTION
   if (mode === 'quiz' && quizWord) return (
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem 1.5rem' }}>
-
       <div style={{ width: '100%', maxWidth: 520, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <button onClick={() => { setMode('home'); setQuizWords([]) }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.muted, fontSize: 14, fontFamily: 'Georgia, serif' }}>← Exit</button>
         <div style={{ display: 'flex', gap: 16 }}>
@@ -250,12 +296,7 @@ export default function Home() {
         <div style={{ fontSize: 64, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 10, fontFamily: 'serif' }}>{quizWord.chinese}</div>
         <div style={{ fontSize: 20, color: s.muted, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{quizWord.pinyin}</div>
         {quizWord.audio_url && (
-          <button onClick={(e) => playAudio(quizWord.audio_url, e)} style={{
-            marginTop: 16, padding: '6px 18px', borderRadius: 24,
-            border: `1px solid ${s.border}`, background: '#fff',
-            cursor: 'pointer', fontSize: 13, color: s.muted,
-            fontFamily: 'Georgia, serif'
-          }}>🔊 Listen</button>
+          <button onClick={(e) => playAudio(quizWord.audio_url, e)} style={{ marginTop: 16, padding: '6px 18px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif' }}>🔊 Listen</button>
         )}
       </div>
 
@@ -263,11 +304,9 @@ export default function Home() {
         {options.map(option => {
           const isCorrect = option === quizWord.english
           const isSelected = option === selected
-          let bg = s.card
-          let border = s.border
-          let color = s.brown
+          let bg = s.card, border = s.border, color = s.brown
           if (selected) {
-            if (isCorrect) { bg = '#f0faf5'; border = '#2c7a4b'; color = '#2c7a4b' }
+            if (isCorrect) { bg = '#f0faf5'; border = s.green; color = s.green }
             else if (isSelected) { bg = '#fdf0ee'; border = s.red; color = s.red }
           }
           return (
@@ -276,7 +315,6 @@ export default function Home() {
               background: bg, cursor: selected ? 'default' : 'pointer',
               fontSize: 14, color, fontFamily: 'Georgia, serif',
               textAlign: 'center' as const, transition: 'all 0.15s',
-              fontWeight: isSelected && isCorrect ? 700 : 400
             }}>
               {isSelected ? (isCorrect ? '✓ ' : '✗ ') : ''}{option}
             </button>
@@ -285,13 +323,8 @@ export default function Home() {
       </div>
 
       {selected && (
-        <div style={{
-          width: '100%', maxWidth: 520,
-          background: selected === quizWord.english ? '#f0faf5' : '#fdf0ee',
-          border: `1px solid ${selected === quizWord.english ? '#2c7a4b' : '#e8c0b8'}`,
-          borderRadius: 12, padding: '1.25rem', marginBottom: '1rem'
-        }}>
-          <div style={{ fontSize: 10, letterSpacing: 2, color: selected === quizWord.english ? '#2c7a4b' : s.red, marginBottom: 8, textTransform: 'uppercase' }}>
+        <div style={{ width: '100%', maxWidth: 520, background: selected === quizWord.english ? '#f0faf5' : '#fdf0ee', border: `1px solid ${selected === quizWord.english ? s.green : '#e8c0b8'}`, borderRadius: 12, padding: '1.25rem', marginBottom: '1rem' }}>
+          <div style={{ fontSize: 10, letterSpacing: 2, color: selected === quizWord.english ? s.green : s.red, marginBottom: 8, textTransform: 'uppercase' }}>
             {selected === quizWord.english ? '✓ Correct!' : `✗ The answer is "${quizWord.english}"`}
           </div>
           <div style={{ fontSize: 14, color: s.text, lineHeight: 1.7, marginBottom: 10, fontFamily: 'Georgia, serif' }}>{quizWord.mnemonic}</div>
@@ -300,18 +333,14 @@ export default function Home() {
       )}
 
       {selected && (
-        <button onClick={nextQuestion} style={{
-          width: '100%', maxWidth: 520, padding: '14px',
-          borderRadius: 10, background: s.red, border: 'none',
-          color: '#fff', fontSize: 16, fontFamily: 'Georgia, serif',
-          cursor: 'pointer', fontWeight: 700
-        }}>
+        <button onClick={nextQuestion} style={{ width: '100%', maxWidth: 520, padding: '14px', borderRadius: 10, background: s.red, border: 'none', color: '#fff', fontSize: 16, fontFamily: 'Georgia, serif', cursor: 'pointer', fontWeight: 700 }}>
           {quizIndex + 1 >= quizWords.length ? 'Finish Quiz' : 'Next Question →'}
         </button>
       )}
     </div>
   )
 
+  // LEARN
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: s.bg }}>
       {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
@@ -382,13 +411,15 @@ export default function Home() {
           <>
             <div onClick={() => setFlipped(!flipped)} style={{
               background: s.card, border: `1px solid ${s.border}`,
-              borderTop: `3px solid ${s.red}`, borderRadius: 12,
-              padding: '2.5rem 2rem', marginBottom: '1rem', cursor: 'pointer',
-              minHeight: 320, transition: 'box-shadow 0.2s',
+              borderTop: `3px solid ${isLearned ? s.green : s.red}`,
+              borderRadius: 12, padding: '2.5rem 2rem', marginBottom: '1rem',
+              cursor: 'pointer', minHeight: 320, transition: 'box-shadow 0.2s',
               boxShadow: flipped ? '0 8px 32px rgba(192,57,43,0.08)' : '0 2px 8px rgba(0,0,0,0.04)'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase' }}>HSK {word.hsk_level}</div>
+                <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>
+                  {isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}
+                </div>
                 <div style={{ fontSize: 10, letterSpacing: 1, color: s.lightbrown, textTransform: 'uppercase', background: '#f5ede4', padding: '3px 10px', borderRadius: 4 }}>{word.topic}</div>
               </div>
 
@@ -425,9 +456,14 @@ export default function Home() {
 
             <div style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
               <button onClick={prev} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', fontSize: 20, color: s.brown }}>←</button>
-              <button onClick={saveWord} style={{ flex: 2, height: 48, borderRadius: 8, border: `1px solid ${isSaved ? s.red : s.border}`, background: isSaved ? '#fdf0ee' : s.card, cursor: 'pointer', fontSize: 13, color: isSaved ? s.red : s.brown, fontFamily: 'Georgia, serif' }}>
-                {isSaved ? 'Saved ✓' : 'Save word'}
+              <button onClick={saveWord} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${isSaved ? s.red : s.border}`, background: isSaved ? '#fdf0ee' : s.card, cursor: 'pointer', fontSize: 13, color: isSaved ? s.red : s.brown, fontFamily: 'Georgia, serif' }}>
+                {isSaved ? 'Saved ✓' : 'Save'}
               </button>
+              {user && (
+                <button onClick={markLearned} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${isLearned ? s.green : s.border}`, background: isLearned ? '#f0faf5' : s.card, cursor: 'pointer', fontSize: 13, color: isLearned ? s.green : s.brown, fontFamily: 'Georgia, serif' }}>
+                  {isLearned ? 'Learned ✓' : 'Learned'}
+                </button>
+              )}
               <button onClick={next} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', fontSize: 20, color: s.brown }}>→</button>
             </div>
             <div style={{ textAlign: 'center', fontSize: 12, color: '#c8a888', letterSpacing: 1 }}>{current + 1} / {words.length}</div>
