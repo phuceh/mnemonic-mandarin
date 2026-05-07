@@ -35,7 +35,7 @@ export default function Landing() {
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => router.push('/auth')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign in</button>
-          <button onClick={() => router.push('/')} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try free</button>
+          <button onClick={() => router.push('/app')} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try free</button>
         </div>
       </nav>
 
@@ -51,7 +51,7 @@ export default function Landing() {
           Most vocabulary apps rely on repetition. Memorize Mandarin uses mnemonic stories — vivid, absurd scenes that make words unforgettable from the first read.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button onClick={() => router.push('/')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Start learning free</button>
+          <button onClick={() => router.push('/app')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Start learning free</button>
           <button onClick={() => router.push('/auth')} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Create account</button>
         </div>
       </section>
@@ -119,7 +119,7 @@ export default function Landing() {
         <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', letterSpacing: 4, marginBottom: 12 }}>记 · REMEMBER</div>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Start remembering Mandarin today</h2>
         <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', marginBottom: '2rem' }}>Free to use. No credit card required.</p>
-        <button onClick={() => router.push('/')} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: '#fff', color: s.red, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
+        <button onClick={() => router.push('/app')} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: '#fff', color: s.red, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
           Start learning free
         </button>
       </section>
