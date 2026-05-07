@@ -20,9 +20,9 @@ export default function Landing() {
   ]
 
   const examples = [
-    { chinese: '老板', pinyin: 'lao ban', english: 'Boss', mnemonic: 'You hear a LOUD BANG and your boss dramatically appears in a cloud of smoke!', emoji: '💥' },
-    { chinese: '你好', pinyin: 'ni hao', english: 'Hello', mnemonic: 'You knock your KNEE on a table and say HOW embarrassing - that is how you greet everyone!', emoji: '🦵' },
-    { chinese: '谢谢', pinyin: 'xie xie', english: 'Thank you', mnemonic: 'You SHAY SHAY your hips in a thank you dance!', emoji: '🕺' },
+    { chinese: '老板', pinyin: 'lǎo bǎn', english: 'Boss', mnemonic: 'You hear a LOUD BANG and your boss dramatically appears in a cloud of smoke!', emoji: '💥', audio: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/audio/2.mp3' },
+    { chinese: '你好', pinyin: 'nǐ hǎo', english: 'Hello', mnemonic: 'You knock your KNEE on a table and say HOW embarrassing - that is how you greet everyone!', emoji: '🦵', audio: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/audio/1.mp3' },
+    { chinese: '谢谢', pinyin: 'xiè xiè', english: 'Thank you', mnemonic: 'You SHAY SHAY your hips in a thank you dance!', emoji: '🕺', audio: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/audio/4.mp3' },
   ]
 
   return (
@@ -64,8 +64,11 @@ export default function Landing() {
             <div key={i} style={{ background: s.card, border: '1px solid #e8ddd0', borderTop: '3px solid #c0392b', borderRadius: 12, padding: '1.5rem' }}>
               <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
                 <div style={{ fontSize: 48, fontWeight: 700, color: s.text, fontFamily: 'serif', lineHeight: 1, marginBottom: 6 }}>{ex.chinese}</div>
-                <div style={{ fontSize: 16, color: s.muted, marginBottom: 2 }}>{ex.pinyin}</div>
-                <div style={{ fontSize: 13, color: s.lightbrown, letterSpacing: 1, textTransform: 'uppercase' }}>{ex.english}</div>
+                <div style={{ fontSize: 16, color: s.muted, marginBottom: 4, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{ex.pinyin}</div>
+                <div style={{ fontSize: 13, color: s.lightbrown, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{ex.english}</div>
+                {ex.audio && (
+                  <button onClick={() => new Audio(ex.audio).play()} style={{ padding: '5px 16px', borderRadius: 20, border: '1px solid #e8ddd0', background: '#fff', cursor: 'pointer', fontSize: 12, color: s.muted, fontFamily: 'Georgia, serif' }}>🔊 Listen</button>
+                )}
               </div>
               <hr style={{ border: 'none', borderTop: '1px solid #e8ddd0', margin: '1rem 0' }} />
               <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 6, textTransform: 'uppercase' }}>Mnemonic</div>
