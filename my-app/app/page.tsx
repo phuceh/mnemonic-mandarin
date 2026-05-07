@@ -54,11 +54,7 @@ export default function Home() {
     })
   }, [])
 
-  useEffect(() => {
-    if (authChecked && !user && mode === 'home') {
-      router.push('/landing')
-    }
-  }, [authChecked, user, mode])
+
 
   useEffect(() => {
     if (user) {
