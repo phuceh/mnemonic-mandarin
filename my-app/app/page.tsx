@@ -41,11 +41,24 @@ export default function Home() {
   const [score, setScore] = useState(0)
   const [streak, setStreak] = useState(0)
   const [quizLoading, setQuizLoading] = useState(false)
+  const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
-    supabase.auth.onAuthStateChange((_, session) => setUser(session?.user ?? null))
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+      setAuthChecked(true)
+    })
+    supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null)
+      setAuthChecked(true)
+    })
   }, [])
+
+  useEffect(() => {
+    if (authChecked && !user && mode === 'home') {
+      router.push('/landing')
+    }
+  }, [authChecked, user, mode])
 
   useEffect(() => {
     if (user) {
@@ -153,16 +166,16 @@ export default function Home() {
     text: '#2d1810', muted: '#8b5a3a', green: '#2c7a4b'
   }
 
+  if (!authChecked) return null
+
   // HOME
   if (mode === 'home') return (
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-
-      {/* Auth button */}
       <div style={{ position: 'absolute' as const, top: 20, right: 20 }}>
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: 12, color: s.lightbrown, fontFamily: 'Georgia, serif' }}>{user.email}</span>
-            <button onClick={() => supabase.auth.signOut()} style={{ fontSize: 12, color: s.muted, background: 'none', border: `1px solid ${s.border}`, borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign out</button>
+            <button onClick={async () => { await supabase.auth.signOut(); router.push('/landing') }} style={{ fontSize: 12, color: s.muted, background: 'none', border: `1px solid ${s.border}`, borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign out</button>
           </div>
         ) : (
           <button onClick={() => router.push('/auth')} style={{ fontSize: 13, color: s.brown, background: s.card, border: `1px solid ${s.border}`, borderRadius: 6, padding: '6px 14px', cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign in</button>
@@ -175,7 +188,6 @@ export default function Home() {
         <p style={{ fontSize: 15, color: s.muted, fontFamily: 'Georgia, serif' }}>Mandarin vocabulary with mnemonics</p>
       </div>
 
-      {/* Progress bars */}
       {user && Object.keys(progress).length > 0 && (
         <div style={{ width: '100%', maxWidth: 480, marginBottom: '2rem' }}>
           <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Your progress</div>
@@ -194,23 +206,12 @@ export default function Home() {
       )}
 
       <div style={{ display: 'flex', gap: 16, width: '100%', maxWidth: 480 }}>
-        <button onClick={() => { setMode('learn'); fetchWords() }} style={{
-          flex: 1, padding: '2rem 1rem', borderRadius: 12,
-          border: `1px solid ${s.border}`, background: s.card,
-          cursor: 'pointer', textAlign: 'center' as const,
-          borderTop: `3px solid ${s.red}`
-        }}>
+        <button onClick={() => { setMode('learn'); fetchWords() }} style={{ flex: 1, padding: '2rem 1rem', borderRadius: 12, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', textAlign: 'center' as const, borderTop: `3px solid ${s.red}` }}>
           <div style={{ fontSize: 32, marginBottom: 8 }}>📖</div>
           <div style={{ fontSize: 18, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 4 }}>Learn</div>
           <div style={{ fontSize: 13, color: s.lightbrown, fontFamily: 'Georgia, serif' }}>Browse flashcards with mnemonics</div>
         </button>
-
-        <button onClick={() => setMode('quiz' as any)} style={{
-          flex: 1, padding: '2rem 1rem', borderRadius: 12,
-          border: `1px solid ${s.border}`, background: s.card,
-          cursor: 'pointer', textAlign: 'center' as const,
-          borderTop: `3px solid ${s.red}`
-        }}>
+        <button onClick={() => setMode('quiz' as any)} style={{ flex: 1, padding: '2rem 1rem', borderRadius: 12, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', textAlign: 'center' as const, borderTop: `3px solid ${s.red}` }}>
           <div style={{ fontSize: 32, marginBottom: 8 }}>🧠</div>
           <div style={{ fontSize: 18, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 4 }}>Quiz</div>
           <div style={{ fontSize: 13, color: s.lightbrown, fontFamily: 'Georgia, serif' }}>Test your knowledge</div>
@@ -219,11 +220,7 @@ export default function Home() {
 
       {saved.length > 0 && (
         <div style={{ marginTop: 16, width: '100%', maxWidth: 480 }}>
-          <button onClick={() => { setHskLevel('saved'); setMode('learn') }} style={{
-            width: '100%', padding: '1rem', borderRadius: 12,
-            border: `1px solid ${s.border}`, background: s.card,
-            cursor: 'pointer', textAlign: 'center' as const,
-          }}>
+          <button onClick={() => { setHskLevel('saved'); setMode('learn') }} style={{ width: '100%', padding: '1rem', borderRadius: 12, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', textAlign: 'center' as const }}>
             <div style={{ fontSize: 14, color: s.brown, fontFamily: 'Georgia, serif' }}>⭐ Saved words ({saved.length})</div>
           </button>
         </div>
@@ -244,22 +241,12 @@ export default function Home() {
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Select level</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
           {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => (
-            <button key={level} onClick={() => setQuizLevel(level)} style={{
-              padding: '10px 6px', borderRadius: 8, border: '1px solid',
-              borderColor: quizLevel === level ? s.red : s.border,
-              background: quizLevel === level ? s.red : s.card,
-              color: quizLevel === level ? '#fff' : s.brown,
-              cursor: 'pointer', fontSize: 13, fontFamily: 'Georgia, serif'
-            }}>
+            <button key={level} onClick={() => setQuizLevel(level)} style={{ padding: '10px 6px', borderRadius: 8, border: '1px solid', borderColor: quizLevel === level ? s.red : s.border, background: quizLevel === level ? s.red : s.card, color: quizLevel === level ? '#fff' : s.brown, cursor: 'pointer', fontSize: 13, fontFamily: 'Georgia, serif' }}>
               {level === 'all' ? 'All' : `HSK ${level}`}
             </button>
           ))}
         </div>
-        <button onClick={startQuiz} disabled={quizLoading} style={{
-          width: '100%', padding: '14px', borderRadius: 10,
-          background: s.red, border: 'none', color: '#fff',
-          fontSize: 16, fontFamily: 'Georgia, serif', cursor: 'pointer', fontWeight: 700
-        }}>
+        <button onClick={startQuiz} disabled={quizLoading} style={{ width: '100%', padding: '14px', borderRadius: 10, background: s.red, border: 'none', color: '#fff', fontSize: 16, fontFamily: 'Georgia, serif', cursor: 'pointer', fontWeight: 700 }}>
           {quizLoading ? 'Loading...' : 'Start Quiz →'}
         </button>
       </div>
@@ -310,12 +297,7 @@ export default function Home() {
             else if (isSelected) { bg = '#fdf0ee'; border = s.red; color = s.red }
           }
           return (
-            <button key={option} onClick={() => handleAnswer(option)} style={{
-              padding: '14px 12px', borderRadius: 10, border: `1px solid ${border}`,
-              background: bg, cursor: selected ? 'default' : 'pointer',
-              fontSize: 14, color, fontFamily: 'Georgia, serif',
-              textAlign: 'center' as const, transition: 'all 0.15s',
-            }}>
+            <button key={option} onClick={() => handleAnswer(option)} style={{ padding: '14px 12px', borderRadius: 10, border: `1px solid ${border}`, background: bg, cursor: selected ? 'default' : 'pointer', fontSize: 14, color, fontFamily: 'Georgia, serif', textAlign: 'center' as const, transition: 'all 0.15s' }}>
               {isSelected ? (isCorrect ? '✓ ' : '✗ ') : ''}{option}
             </button>
           )
@@ -345,36 +327,20 @@ export default function Home() {
     <div style={{ display: 'flex', minHeight: '100vh', background: s.bg }}>
       {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
 
-      <div style={{
-        position: 'fixed', top: 0, left: 0, height: '100vh', width: 256,
-        background: '#fdf8f2', borderRight: `1px solid ${s.border}`, zIndex: 20,
-        transform: menuOpen ? 'translateX(0)' : 'translateX(-100%)',
-        transition: 'transform 0.25s ease', padding: '2rem 1.5rem',
-        display: 'flex', flexDirection: 'column', overflowY: 'auto'
-      }}>
+      <div style={{ position: 'fixed', top: 0, left: 0, height: '100vh', width: 256, background: '#fdf8f2', borderRight: `1px solid ${s.border}`, zIndex: 20, transform: menuOpen ? 'translateX(0)' : 'translateX(-100%)', transition: 'transform 0.25s ease', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         <button onClick={() => { setMenuOpen(false); setMode('home') }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.muted, fontSize: 13, textAlign: 'left' as const, marginBottom: '1.5rem', fontFamily: 'Georgia, serif' }}>← Home</button>
         <div style={{ fontSize: 22, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 4 }}>记 · Remember</div>
         <div style={{ fontSize: 11, color: s.red, letterSpacing: 3, marginBottom: '1.5rem' }}>普通话词汇助手</div>
 
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, marginBottom: 10, textTransform: 'uppercase' }}>HSK Level</div>
         {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => (
-          <button key={level} onClick={() => { setHskLevel(level); setMenuOpen(false) }} style={{
-            ...menuBtn,
-            borderColor: hskLevel === level ? s.red : s.border,
-            background: hskLevel === level ? s.red : 'transparent',
-            color: hskLevel === level ? '#fff' : s.brown,
-          }}>
+          <button key={level} onClick={() => { setHskLevel(level); setMenuOpen(false) }} style={{ ...menuBtn, borderColor: hskLevel === level ? s.red : s.border, background: hskLevel === level ? s.red : 'transparent', color: hskLevel === level ? '#fff' : s.brown }}>
             {level === 'all' ? 'All words' : `HSK ${level}`}
           </button>
         ))}
 
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, margin: '1.5rem 0 10px', textTransform: 'uppercase' }}>My Words</div>
-        <button onClick={() => { setHskLevel('saved'); setMenuOpen(false) }} style={{
-          ...menuBtn,
-          borderColor: hskLevel === 'saved' ? s.red : s.border,
-          background: hskLevel === 'saved' ? s.red : 'transparent',
-          color: hskLevel === 'saved' ? '#fff' : s.brown,
-        }}>
+        <button onClick={() => { setHskLevel('saved'); setMenuOpen(false) }} style={{ ...menuBtn, borderColor: hskLevel === 'saved' ? s.red : s.border, background: hskLevel === 'saved' ? s.red : 'transparent', color: hskLevel === 'saved' ? '#fff' : s.brown }}>
           Saved words {saved.length > 0 && `(${saved.length})`}
         </button>
 
@@ -409,17 +375,9 @@ export default function Home() {
           </div>
         ) : word ? (
           <>
-            <div onClick={() => setFlipped(!flipped)} style={{
-              background: s.card, border: `1px solid ${s.border}`,
-              borderTop: `3px solid ${isLearned ? s.green : s.red}`,
-              borderRadius: 12, padding: '2.5rem 2rem', marginBottom: '1rem',
-              cursor: 'pointer', minHeight: 320, transition: 'box-shadow 0.2s',
-              boxShadow: flipped ? '0 8px 32px rgba(192,57,43,0.08)' : '0 2px 8px rgba(0,0,0,0.04)'
-            }}>
+            <div onClick={() => setFlipped(!flipped)} style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${isLearned ? s.green : s.red}`, borderRadius: 12, padding: '2.5rem 2rem', marginBottom: '1rem', cursor: 'pointer', minHeight: 320, transition: 'box-shadow 0.2s', boxShadow: flipped ? '0 8px 32px rgba(192,57,43,0.08)' : '0 2px 8px rgba(0,0,0,0.04)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>
-                  {isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}
-                </div>
+                <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>{isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}</div>
                 <div style={{ fontSize: 10, letterSpacing: 1, color: s.lightbrown, textTransform: 'uppercase', background: '#f5ede4', padding: '3px 10px', borderRadius: 4 }}>{word.topic}</div>
               </div>
 
