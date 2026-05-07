@@ -48,7 +48,7 @@ export default function Landing() {
           <span style={{ color: s.red }}>words that actually stick</span>
         </h1>
         <p style={{ fontSize: 18, color: s.muted, lineHeight: 1.7, marginBottom: '2.5rem' }}>
-          Most vocabulary apps rely on repetition. Memorize Mandarin uses mnemonic stories — vivid, absurd scenes that make words unforgettable from the first read.
+          Most vocabulary apps rely on repetition. Memorize Mandarin uses mnemonic stories - vivid, absurd scenes that make words unforgettable from the first read.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <button onClick={() => router.push('/app')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Start learning free</button>

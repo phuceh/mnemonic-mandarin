@@ -24,7 +24,7 @@ export default function Home() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [words, setWords] = useState<Word[]>([])
-  const [mode, setMode] = useState<'learn' | 'quiz' | 'home'>('home')
+  const [mode, setMode] = useState<'learn' | 'quiz' | 'home' | 'results'>('home')
   const [current, setCurrent] = useState(0)
   const [flipped, setFlipped] = useState(false)
   const [saved, setSaved] = useState<Word[]>([])
@@ -34,6 +34,7 @@ export default function Home() {
   const [learned, setLearned] = useState<Set<number>>(new Set())
   const [progress, setProgress] = useState<Record<number, { learned: number, total: number }>>({})
   const [quizLevel, setQuizLevel] = useState<any>('all')
+  const [quizCount, setQuizCount] = useState<number>(10)
   const [quizWords, setQuizWords] = useState<Word[]>([])
   const [quizIndex, setQuizIndex] = useState(0)
   const [options, setOptions] = useState<string[]>([])
@@ -41,6 +42,7 @@ export default function Home() {
   const [score, setScore] = useState(0)
   const [streak, setStreak] = useState(0)
   const [quizLoading, setQuizLoading] = useState(false)
+  const [wrongAnswers, setWrongAnswers] = useState<Word[]>([])
   const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
@@ -53,8 +55,6 @@ export default function Home() {
       setAuthChecked(true)
     })
   }, [])
-
-
 
   useEffect(() => {
     if (user) {
@@ -115,8 +115,11 @@ export default function Home() {
     if (quizLevel !== 'all') query = query.eq('hsk_level', quizLevel)
     const { data } = await query
     const shuffled = (data || []).sort(() => Math.random() - 0.5)
-    setQuizWords(shuffled); setQuizIndex(0); setScore(0); setStreak(0); setSelected(null)
-    generateOptions(shuffled[0], data || [])
+    const selected = quizCount === 0 ? shuffled : shuffled.slice(0, quizCount)
+    setQuizWords(selected)
+    setQuizIndex(0); setScore(0); setStreak(0)
+    setSelected(null); setWrongAnswers([])
+    generateOptions(selected[0], data || [])
     setQuizLoading(false); setMode('quiz')
   }
 
@@ -128,13 +131,17 @@ export default function Home() {
   function handleAnswer(answer: string) {
     if (selected) return
     setSelected(answer)
-    if (answer === quizWords[quizIndex].english) { setScore(s => s + 1); setStreak(s => s + 1) }
-    else setStreak(0)
+    if (answer === quizWords[quizIndex].english) {
+      setScore(s => s + 1); setStreak(s => s + 1)
+    } else {
+      setStreak(0)
+      setWrongAnswers(prev => [...prev, quizWords[quizIndex]])
+    }
   }
 
   function nextQuestion() {
     const next = quizIndex + 1
-    if (next >= quizWords.length) { setMode('home'); return }
+    if (next >= quizWords.length) { setMode('results'); return }
     setQuizIndex(next); setSelected(null)
     generateOptions(quizWords[next], quizWords)
   }
@@ -234,6 +241,7 @@ export default function Home() {
         <p style={{ fontSize: 14, color: s.muted, fontFamily: 'Georgia, serif' }}>Choose your level and test yourself</p>
       </div>
       <div style={{ width: '100%', maxWidth: 400 }}>
+
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Select level</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
           {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => (
@@ -242,12 +250,76 @@ export default function Home() {
             </button>
           ))}
         </div>
+
+        <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Number of questions</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
+          {[10, 25, 50, 0].map(count => (
+            <button key={count} onClick={() => setQuizCount(count)} style={{ padding: '10px 6px', borderRadius: 8, border: '1px solid', borderColor: quizCount === count ? s.red : s.border, background: quizCount === count ? s.red : s.card, color: quizCount === count ? '#fff' : s.brown, cursor: 'pointer', fontSize: 13, fontFamily: 'Georgia, serif' }}>
+              {count === 0 ? 'All' : count}
+            </button>
+          ))}
+        </div>
+
         <button onClick={startQuiz} disabled={quizLoading} style={{ width: '100%', padding: '14px', borderRadius: 10, background: s.red, border: 'none', color: '#fff', fontSize: 16, fontFamily: 'Georgia, serif', cursor: 'pointer', fontWeight: 700 }}>
           {quizLoading ? 'Loading...' : 'Start Quiz →'}
         </button>
       </div>
     </div>
   )
+
+  // RESULTS SCREEN
+  if (mode === 'results') {
+    const total = quizWords.length
+    const pct = Math.round((score / total) * 100)
+    const msg = pct === 100 ? 'Perfect score!' : pct >= 80 ? 'Excellent work!' : pct >= 60 ? 'Good effort!' : pct >= 40 ? 'Keep practising!' : 'Keep going!'
+    const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '📚'
+
+    return (
+      <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '3rem 1.5rem' }}>
+        <div style={{ width: '100%', maxWidth: 520 }}>
+          <div style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', textAlign: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>{emoji}</div>
+            <div style={{ fontSize: 14, color: s.lightbrown, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>Quiz complete</div>
+            <div style={{ fontSize: 52, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', lineHeight: 1, marginBottom: 4 }}>
+              {score}<span style={{ fontSize: 24, color: s.lightbrown }}>/{total}</span>
+            </div>
+            <div style={{ fontSize: 18, color: s.red, marginBottom: 20, fontFamily: 'Georgia, serif' }}>{pct}% · {msg}</div>
+            <div style={{ height: 8, background: s.border, borderRadius: 4, marginBottom: 24 }}>
+              <div style={{ height: '100%', background: pct >= 60 ? s.green : s.red, borderRadius: 4, width: `${pct}%`, transition: 'width 0.8s' }} />
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button onClick={() => { setMode('quiz' as any); setQuizWords([]); setWrongAnswers([]) }} style={{ flex: 1, padding: '12px', borderRadius: 8, border: `1px solid ${s.border}`, background: s.bg, color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>
+                Try again
+              </button>
+              <button onClick={() => { setMode('home'); setQuizWords([]); setWrongAnswers([]) }} style={{ flex: 1, padding: '12px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
+                Home
+              </button>
+            </div>
+          </div>
+
+          {wrongAnswers.length > 0 && (
+            <div>
+              <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase', marginBottom: 12 }}>Words to review ({wrongAnswers.length})</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {wrongAnswers.map((w, i) => (
+                  <div key={i} style={{ background: s.card, border: `1px solid ${s.border}`, borderLeft: `3px solid ${s.red}`, borderRadius: 8, padding: '1rem 1.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                        <span style={{ fontSize: 24, fontWeight: 700, color: s.text, fontFamily: 'serif' }}>{w.chinese}</span>
+                        <span style={{ fontSize: 14, color: s.muted, fontFamily: 'Calibri, "Trebuchet MS", sans-serif' }}>{w.pinyin}</span>
+                      </div>
+                      <span style={{ fontSize: 13, color: s.lightbrown, textTransform: 'uppercase', letterSpacing: 1 }}>{w.english}</span>
+                    </div>
+                    <div style={{ fontSize: 13, color: s.brown, lineHeight: 1.6, fontStyle: 'italic' }}>{w.mnemonic}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   // QUIZ QUESTION
   if (mode === 'quiz' && quizWord) return (
