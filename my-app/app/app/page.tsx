@@ -30,6 +30,8 @@ export default function Home() {
   const [saved, setSaved] = useState<Word[]>([])
   const [hskLevel, setHskLevel] = useState<any>('all')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [gridOpen, setGridOpen] = useState(false)
+  const [gridView, setGridView] = useState<'chinese' | 'pinyin' | 'english'>('chinese')
   const [loading, setLoading] = useState(false)
   const [learned, setLearned] = useState<Set<number>>(new Set())
   const [progress, setProgress] = useState<Record<number, { learned: number, total: number }>>({})
@@ -115,11 +117,11 @@ export default function Home() {
     if (quizLevel !== 'all') query = query.eq('hsk_level', quizLevel)
     const { data } = await query
     const shuffled = (data || []).sort(() => Math.random() - 0.5)
-    const selected = quizCount === 0 ? shuffled : shuffled.slice(0, quizCount)
-    setQuizWords(selected)
+    const sel = quizCount === 0 ? shuffled : shuffled.slice(0, quizCount)
+    setQuizWords(sel)
     setQuizIndex(0); setScore(0); setStreak(0)
     setSelected(null); setWrongAnswers([])
-    generateOptions(selected[0], data || [])
+    generateOptions(sel[0], data || [])
     setQuizLoading(false); setMode('quiz')
   }
 
@@ -186,9 +188,9 @@ export default function Home() {
       </div>
 
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        <div style={{ fontSize: 11, color: s.red, letterSpacing: 4, marginBottom: 8 }}>普通话词汇助手</div>
-        <h1 style={{ fontSize: 42, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', letterSpacing: '-1px', marginBottom: 8 }}>记 · Remember</h1>
-        <p style={{ fontSize: 15, color: s.muted, fontFamily: 'Georgia, serif' }}>Mandarin vocabulary with mnemonics</p>
+        <img src="/seal.svg" height="100" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1rem' }} />
+        <h1 style={{ fontSize: 32, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', letterSpacing: '-0.5px', marginBottom: 6 }}>Memorize Mandarin</h1>
+        <p style={{ fontSize: 14, color: s.muted, fontFamily: 'Georgia, serif' }}>Mandarin vocabulary with mnemonics</p>
       </div>
 
       {user && Object.keys(progress).length > 0 && (
@@ -241,7 +243,6 @@ export default function Home() {
         <p style={{ fontSize: 14, color: s.muted, fontFamily: 'Georgia, serif' }}>Choose your level and test yourself</p>
       </div>
       <div style={{ width: '100%', maxWidth: 400 }}>
-
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Select level</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
           {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => (
@@ -250,7 +251,6 @@ export default function Home() {
             </button>
           ))}
         </div>
-
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Number of questions</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
           {[10, 25, 50, 0].map(count => (
@@ -259,7 +259,6 @@ export default function Home() {
             </button>
           ))}
         </div>
-
         <button onClick={startQuiz} disabled={quizLoading} style={{ width: '100%', padding: '14px', borderRadius: 10, background: s.red, border: 'none', color: '#fff', fontSize: 16, fontFamily: 'Georgia, serif', cursor: 'pointer', fontWeight: 700 }}>
           {quizLoading ? 'Loading...' : 'Start Quiz →'}
         </button>
@@ -288,12 +287,8 @@ export default function Home() {
               <div style={{ height: '100%', background: pct >= 60 ? s.green : s.red, borderRadius: 4, width: `${pct}%`, transition: 'width 0.8s' }} />
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={() => { setMode('quiz' as any); setQuizWords([]); setWrongAnswers([]) }} style={{ flex: 1, padding: '12px', borderRadius: 8, border: `1px solid ${s.border}`, background: s.bg, color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>
-                Try again
-              </button>
-              <button onClick={() => { setMode('home'); setQuizWords([]); setWrongAnswers([]) }} style={{ flex: 1, padding: '12px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
-                Home
-              </button>
+              <button onClick={() => { setMode('quiz' as any); setQuizWords([]); setWrongAnswers([]) }} style={{ flex: 1, padding: '12px', borderRadius: 8, border: `1px solid ${s.border}`, background: s.bg, color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Try again</button>
+              <button onClick={() => { setMode('home'); setQuizWords([]); setWrongAnswers([]) }} style={{ flex: 1, padding: '12px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Home</button>
             </div>
           </div>
 
@@ -394,10 +389,12 @@ export default function Home() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: s.bg }}>
       {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
+      {gridOpen && <div onClick={() => setGridOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
 
+      {/* Side menu */}
       <div style={{ position: 'fixed', top: 0, left: 0, height: '100vh', width: 256, background: '#fdf8f2', borderRight: `1px solid ${s.border}`, zIndex: 20, transform: menuOpen ? 'translateX(0)' : 'translateX(-100%)', transition: 'transform 0.25s ease', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         <button onClick={() => { setMenuOpen(false); setMode('home') }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.muted, fontSize: 13, textAlign: 'left' as const, marginBottom: '1.5rem', fontFamily: 'Georgia, serif' }}>← Home</button>
-        <div style={{ fontSize: 22, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 4 }}>记 · Remember</div>
+        <div style={{ fontSize: 22, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 4 }}>Memorize Mandarin</div>
         <div style={{ fontSize: 11, color: s.red, letterSpacing: 3, marginBottom: '1.5rem' }}>普通话词汇助手</div>
 
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, marginBottom: 10, textTransform: 'uppercase' }}>HSK Level</div>
@@ -423,7 +420,8 @@ export default function Home() {
             ))}
           </div>
         )}
-                {user && (
+
+        {user && (
           <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
             <div style={{ fontSize: 11, color: s.lightbrown, marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</div>
             <button onClick={async () => { await supabase.auth.signOut(); router.push('/landing') }} style={{ ...menuBtn, borderColor: s.border, background: 'transparent', color: s.red }}>
@@ -433,14 +431,70 @@ export default function Home() {
         )}
       </div>
 
+      {/* Grid panel */}
+      <div style={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: 320, background: s.card, borderLeft: `1px solid ${s.border}`, zIndex: 20, transform: gridOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.25s ease', padding: '1.5rem', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>
+            All words {hskLevel !== 'all' ? `· HSK ${hskLevel}` : ''}
+          </div>
+          <button onClick={() => setGridOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.muted, fontSize: 20 }}>×</button>
+        </div>
+        <div style={{ fontSize: 11, color: s.lightbrown, marginBottom: 12, fontFamily: 'Georgia, serif' }}>
+          {words.filter(w => learned.has(w.id)).length} / {words.length} learned
+        </div>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
+          {(['chinese', 'pinyin', 'english'] as const).map(view => (
+            <button key={view} onClick={() => setGridView(view)} style={{
+              flex: 1, padding: '6px 4px', borderRadius: 6, border: '1px solid',
+              borderColor: gridView === view ? s.red : s.border,
+              background: gridView === view ? s.red : 'transparent',
+              color: gridView === view ? '#fff' : s.brown,
+              cursor: 'pointer', fontSize: 11, fontFamily: 'Georgia, serif',
+              textTransform: 'capitalize' as const
+            }}>
+              {view}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+          {words.map((w, i) => (
+            <button key={w.id} onClick={() => { setCurrent(i); setFlipped(false); setGridOpen(false) }} style={{
+              padding: '10px 4px', borderRadius: 8,
+              border: `1px solid ${learned.has(w.id) ? s.green : s.border}`,
+              background: learned.has(w.id) ? '#f0faf5' : i === current ? '#fdf0ee' : s.bg,
+              cursor: 'pointer', textAlign: 'center' as const,
+              fontFamily: gridView === 'chinese' ? 'serif' : 'Georgia, serif',
+              fontSize: gridView === 'chinese' ? 20 : 10,
+              color: s.text, fontWeight: 700,
+              overflow: 'hidden', wordBreak: 'break-word' as const
+            }}>
+              {gridView === 'chinese' ? w.chinese : gridView === 'pinyin' ? w.pinyin : w.english}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <main style={{ flex: 1, maxWidth: 580, margin: '0 auto', padding: '2rem 1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem' }}>
           <button onClick={() => setMenuOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: s.brown, padding: '4px 8px 4px 0' }}>☰</button>
           <div style={{ flex: 1, textAlign: 'center' }}>
-            <h1 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', letterSpacing: '-0.5px' }}>记 · Remember</h1>
-            <div style={{ fontSize: 11, color: s.red, letterSpacing: 4, marginTop: 2 }}>普通话词汇助手</div>
+            <img src="/seal.svg" height="48" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 4px' }} />
+            <div style={{ fontSize: 16, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>Memorize Mandarin</div>
+            <div style={{ fontSize: 11, color: s.muted, fontFamily: 'Georgia, serif' }}>Mandarin vocabulary with mnemonics</div>
           </div>
-          <div style={{ width: 36 }} />
+          <button onClick={() => setGridOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.brown, padding: '4px 0 4px 8px' }}>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <circle cx="3" cy="3" r="1.5" fill="currentColor"/>
+              <circle cx="9" cy="3" r="1.5" fill="currentColor"/>
+              <circle cx="15" cy="3" r="1.5" fill="currentColor"/>
+              <circle cx="3" cy="9" r="1.5" fill="currentColor"/>
+              <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+              <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
+              <circle cx="3" cy="15" r="1.5" fill="currentColor"/>
+              <circle cx="9" cy="15" r="1.5" fill="currentColor"/>
+              <circle cx="15" cy="15" r="1.5" fill="currentColor"/>
+            </svg>
+          </button>
         </div>
 
         {loading ? (
@@ -451,41 +505,45 @@ export default function Home() {
           </div>
         ) : word ? (
           <>
-            <div onClick={() => setFlipped(!flipped)} style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${isLearned ? s.green : s.red}`, borderRadius: 12, padding: '2.5rem 2rem', marginBottom: '1rem', cursor: 'pointer', minHeight: 320, transition: 'box-shadow 0.2s', boxShadow: flipped ? '0 8px 32px rgba(192,57,43,0.08)' : '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>{isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}</div>
-                <div style={{ fontSize: 10, letterSpacing: 1, color: s.lightbrown, textTransform: 'uppercase', background: '#f5ede4', padding: '3px 10px', borderRadius: 4 }}>{word.topic}</div>
-              </div>
+            <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 320 }}>
+              <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
 
-              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                <div style={{ fontSize: 72, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 12, fontFamily: 'serif' }}>{word.chinese}</div>
-                <div style={{ fontSize: 22, color: s.muted, marginBottom: 6, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{word.pinyin}</div>
-                <div style={{ fontSize: 16, color: s.lightbrown, letterSpacing: 1, marginBottom: 16, textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>{word.english}</div>
-                {word.audio_url && (
-                  <button onClick={(e) => playAudio(word.audio_url, e)} style={{ padding: '7px 20px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif' }}>🔊 Listen</button>
-                )}
-              </div>
-
-              {flipped ? (
-                <div style={{ borderTop: `1px solid ${s.border}`, paddingTop: '1.5rem' }}>
-                  <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
-                  <div style={{ fontSize: 15, lineHeight: 1.8, color: '#3d2010', marginBottom: '1.25rem' }}>{word.mnemonic}</div>
-                  <div style={{ fontSize: 44, textAlign: 'center', padding: '1.25rem', background: '#f5ede4', borderRadius: 8 }}>{word.scene_emoji}</div>
-                  {word.syllables && word.syllables.length > 0 && (
-                    <div style={{ display: 'flex', gap: 8, marginTop: '1rem' }}>
-                      {word.syllables.map((s2, i) => (
-                        <div key={i} style={{ flex: 1, padding: '10px 12px', border: `1px solid ${s.border}`, borderRadius: 8, textAlign: 'center', background: '#fff' }}>
-                          <div style={{ fontSize: 22, fontWeight: 700, color: s.text, fontFamily: 'serif' }}>{s2.zh}</div>
-                          <div style={{ fontSize: 13, color: s.muted, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{s2.pinyin}</div>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: TONE_COLORS[s2.tone - 1] }}>"{s2.sound_hook}"</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                {/* Front */}
+                <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${isLearned ? s.green : s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 320, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>{isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}</div>
+                    <div style={{ fontSize: 10, letterSpacing: 1, color: s.lightbrown, textTransform: 'uppercase', background: '#f5ede4', padding: '3px 10px', borderRadius: 4 }}>{word.topic}</div>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: 72, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 12, fontFamily: 'serif' }}>{word.chinese}</div>
+                    <div style={{ fontSize: 22, color: s.muted, marginBottom: 6, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{word.pinyin}</div>
+                    <div style={{ fontSize: 16, color: s.lightbrown, letterSpacing: 1, marginBottom: 16, textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>{word.english}</div>
+                    {word.audio_url && (
+                      <button onClick={(e) => playAudio(word.audio_url, e)} style={{ padding: '7px 20px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif' }}>🔊 Listen</button>
+                    )}
+                  </div>
+                  <div style={{ textAlign: 'center', fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '2rem' }}>tap to reveal mnemonic</div>
                 </div>
-              ) : (
-                <div style={{ textAlign: 'center', fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '1rem' }}>tap to reveal mnemonic</div>
-              )}
+
+                {/* Back */}
+                <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${isLearned ? s.green : s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 320, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>{isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}</div>
+                    <div style={{ fontSize: 10, letterSpacing: 1, color: s.lightbrown, textTransform: 'uppercase', background: '#f5ede4', padding: '3px 10px', borderRadius: 4 }}>{word.topic}</div>
+                  </div>
+                  <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                    <div style={{ fontSize: 48, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 8, fontFamily: 'serif' }}>{word.chinese}</div>
+                    <div style={{ fontSize: 18, color: s.muted, marginBottom: 4, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{word.pinyin}</div>
+                    <div style={{ fontSize: 14, color: s.lightbrown, letterSpacing: 1, textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>{word.english}</div>
+                  </div>
+                  <div style={{ borderTop: `1px solid ${s.border}`, paddingTop: '1.25rem' }}>
+                    <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
+                    <div style={{ fontSize: 15, lineHeight: 1.8, color: '#3d2010', marginBottom: '1.25rem' }}>{word.mnemonic}</div>
+                    <div style={{ fontSize: 44, textAlign: 'center', padding: '1.25rem', background: '#f5ede4', borderRadius: 8 }}>{word.scene_emoji}</div>                    
+                  </div>
+                </div>
+
+              </div>
             </div>
 
             <div style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
