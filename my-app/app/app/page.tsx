@@ -16,6 +16,7 @@ type Word = {
   topic: string
   syllables: Syllable[]
   audio_url: string
+  image_url: string
 }
 
 const TONE_COLORS = ['#c0392b', '#8e6a3a', '#2c7a4b', '#1a5a8a']
@@ -80,7 +81,11 @@ export default function Home() {
     let query = supabase.from('vocabulary').select('*')
     if (hskLevel !== 'all') query = query.eq('hsk_level', hskLevel)
     const { data } = await query
-    setWords(data || [])
+    const sorted = (data || []).sort((a, b) => 
+      a.pinyin.normalize('NFD').replace(/[\u0300-\u036f]/g, '').localeCompare(
+      b.pinyin.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+    )
+    setWords(sorted)
     setCurrent(0); setFlipped(false); setLoading(false)
   }
 
@@ -373,7 +378,11 @@ export default function Home() {
             {selected === quizWord.english ? '✓ Correct!' : `✗ The answer is "${quizWord.english}"`}
           </div>
           <div style={{ fontSize: 14, color: s.text, lineHeight: 1.7, marginBottom: 10, fontFamily: 'Georgia, serif' }}>{quizWord.mnemonic}</div>
-          <div style={{ fontSize: 36, textAlign: 'center' }}>{quizWord.scene_emoji}</div>
+          {quizWord.image_url ? (
+            <img src={quizWord.image_url} alt={quizWord.english} style={{ width: '100%', borderRadius: 8, objectFit: 'cover', maxHeight: 200 }} />
+          ) : (
+            <div style={{ fontSize: 36, textAlign: 'center' }}>{quizWord.scene_emoji}</div>
+          )}
         </div>
       )}
 
@@ -463,8 +472,8 @@ export default function Home() {
               border: `1px solid ${learned.has(w.id) ? s.green : s.border}`,
               background: learned.has(w.id) ? '#f0faf5' : i === current ? '#fdf0ee' : s.bg,
               cursor: 'pointer', textAlign: 'center' as const,
-              fontFamily: gridView === 'chinese' ? 'serif' : 'Georgia, serif',
-              fontSize: gridView === 'chinese' ? 20 : 10,
+              fontFamily: gridView === 'chinese' ? 'serif' : 'Calibri, "Trebuchet MS", "Arial Unicode MS", Georgia, serif',
+              fontSize: gridView === 'chinese' ? 14 : 14,
               color: s.text, fontWeight: 700,
               overflow: 'hidden', wordBreak: 'break-word' as const
             }}>
@@ -539,7 +548,11 @@ export default function Home() {
                   <div style={{ borderTop: `1px solid ${s.border}`, paddingTop: '1.25rem' }}>
                     <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
                     <div style={{ fontSize: 15, lineHeight: 1.8, color: '#3d2010', marginBottom: '1.25rem' }}>{word.mnemonic}</div>
-                    <div style={{ fontSize: 44, textAlign: 'center', padding: '1.25rem', background: '#f5ede4', borderRadius: 8 }}>{word.scene_emoji}</div>                    
+                    {word.image_url ? (
+                      <img src={word.image_url} alt={word.english} style={{ width: '100%', borderRadius: 8, objectFit: 'cover', maxHeight: 200 }} />
+                    ) : (
+                      <div style={{ fontSize: 44, textAlign: 'center', padding: '1.25rem', background: '#f5ede4', borderRadius: 8 }}>{word.scene_emoji}</div>
+                    )}
                   </div>
                 </div>
 
