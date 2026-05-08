@@ -2,8 +2,11 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: '记 · Remember',
-  description: 'Mandarin vocabulary builder with mnemonics',
+  title: 'Memorize Mandarin',
+  description: 'Mandarin vocabulary with mnemonics',
+  icons: {
+    icon: '/seal.svg',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

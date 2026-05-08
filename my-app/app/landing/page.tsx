@@ -29,7 +29,7 @@ export default function Landing() {
     <div style={{ background: s.bg, minHeight: '100vh', fontFamily: 'Georgia, serif' }}>
 
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: '1px solid #e8ddd0', background: s.card, position: 'sticky', top: 0, zIndex: 100 }}>
-        <img src="/logo.svg" height="70" alt="Memorize Mandarin" />
+        <img src="/seal.svg" height="50" alt="Memorize Mandarin" />
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => router.push('/auth')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign in</button>
           <button onClick={() => router.push('/app')} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try free</button>
@@ -120,7 +120,7 @@ export default function Landing() {
       </section>
 
       <footer style={{ background: s.card, borderTop: '1px solid #e8ddd0', padding: '2rem', textAlign: 'center' }}>
-        <img src="/logo.svg" height="80" alt="Memorize Mandarin" style={{ marginBottom: 8 }} />
+        <img src="/seal.svg" height="60" alt="Memorize Mandarin" style={{ marginBottom: 8 }} />
         <div style={{ fontSize: 12, color: s.lightbrown }}>Mandarin vocabulary with mnemonics · HSK 1-6</div>
       </footer>
     </div>
