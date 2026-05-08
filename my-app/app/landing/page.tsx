@@ -28,21 +28,16 @@ export default function Landing() {
   return (
     <div style={{ background: s.bg, minHeight: '100vh', fontFamily: 'Georgia, serif' }}>
 
-      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 2rem', borderBottom: '1px solid #e8ddd0', background: s.card, position: 'sticky', top: 0, zIndex: 100 }}>
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: s.text }}>Memorize Mandarin</div>
-          <div style={{ fontSize: 10, color: s.red, letterSpacing: 3 }}>记 · Remember</div>
-        </div>
+      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: '1px solid #e8ddd0', background: s.card, position: 'sticky', top: 0, zIndex: 100 }}>
+        <img src="/logo.svg" height="70" alt="Memorize Mandarin" />
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => router.push('/auth')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign in</button>
           <button onClick={() => router.push('/app')} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try free</button>
         </div>
       </nav>
 
-      <section style={{ maxWidth: 720, margin: '0 auto', padding: '5rem 2rem 4rem', textAlign: 'center' }}>
-        <div style={{ display: 'inline-block', background: '#fdf0ee', border: '1px solid #e8c0b8', borderRadius: 20, padding: '4px 14px', fontSize: 12, color: s.red, letterSpacing: 2, marginBottom: '1.5rem' }}>
-          HSK 1-6 · 150+ words · Free to use
-        </div>
+      <section style={{ maxWidth: 720, margin: '0 auto', padding: '2rem 2rem 4rem', textAlign: 'center' }}>
+        <img src="/logo.svg" height="180" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem' }} />
         <h1 style={{ fontSize: 52, fontWeight: 700, color: s.text, lineHeight: 1.1, letterSpacing: '-1.5px', marginBottom: '1.25rem' }}>
           Remember Mandarin<br />
           <span style={{ color: s.red }}>words that actually stick</span>
@@ -125,8 +120,7 @@ export default function Landing() {
       </section>
 
       <footer style={{ background: s.card, borderTop: '1px solid #e8ddd0', padding: '2rem', textAlign: 'center' }}>
-        <div style={{ fontSize: 16, fontWeight: 700, color: s.text, marginBottom: 4 }}>Memorize Mandarin</div>
-        <div style={{ fontSize: 11, color: s.red, letterSpacing: 3, marginBottom: 12 }}>记 · Remember</div>
+        <img src="/logo.svg" height="80" alt="Memorize Mandarin" style={{ marginBottom: 8 }} />
         <div style={{ fontSize: 12, color: s.lightbrown }}>Mandarin vocabulary with mnemonics · HSK 1-6</div>
       </footer>
     </div>
