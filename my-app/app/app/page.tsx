@@ -11,9 +11,7 @@ type Word = {
   pinyin: string
   english: string
   mnemonic: string
-  scene_emoji: string
   hsk_level: number
-  topic: string
   syllables: Syllable[]
   audio_url: string
   image_url: string
@@ -33,6 +31,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [gridOpen, setGridOpen] = useState(false)
   const [gridView, setGridView] = useState<'chinese' | 'pinyin' | 'english'>('chinese')
+  const [shuffle, setShuffle] = useState(false)
   const [loading, setLoading] = useState(false)
   const [learned, setLearned] = useState<Set<number>>(new Set())
   const [progress, setProgress] = useState<Record<number, { learned: number, total: number }>>({})
@@ -81,7 +80,7 @@ export default function Home() {
     let query = supabase.from('vocabulary').select('*')
     if (hskLevel !== 'all') query = query.eq('hsk_level', hskLevel)
     const { data } = await query
-    const sorted = (data || []).sort((a, b) => 
+    const sorted = (data || []).sort((a, b) =>
       a.pinyin.normalize('NFD').replace(/[\u0300-\u036f]/g, '').localeCompare(
       b.pinyin.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
     )
@@ -153,8 +152,8 @@ export default function Home() {
     generateOptions(quizWords[next], quizWords)
   }
 
-  function next() { setFlipped(false); setTimeout(() => setCurrent(i => (i + 1) % words.length), 150) }
-  function prev() { setFlipped(false); setTimeout(() => setCurrent(i => (i - 1 + words.length) % words.length), 150) }
+  function next() { setFlipped(false); setTimeout(() => setCurrent(i => shuffle ? Math.floor(Math.random() * words.length) : (i + 1) % words.length), 150) }
+  function prev() { setFlipped(false); setTimeout(() => setCurrent(i => shuffle ? Math.floor(Math.random() * words.length) : (i - 1 + words.length) % words.length), 150) }
   function saveWord() { const word = words[current]; if (!saved.find(w => w.id === word.id)) setSaved([...saved, word]) }
   function removeWord(id: number) { setSaved(saved.filter(w => w.id !== id)) }
   function playAudio(url: string, e: React.MouseEvent) { e.stopPropagation(); new Audio(url).play() }
@@ -378,10 +377,8 @@ export default function Home() {
             {selected === quizWord.english ? '✓ Correct!' : `✗ The answer is "${quizWord.english}"`}
           </div>
           <div style={{ fontSize: 14, color: s.text, lineHeight: 1.7, marginBottom: 10, fontFamily: 'Georgia, serif' }}>{quizWord.mnemonic}</div>
-          {quizWord.image_url ? (
+          {quizWord.image_url && (
             <img src={quizWord.image_url} alt={quizWord.english} style={{ width: '100%', borderRadius: 8, objectFit: 'cover', maxHeight: 200 }} />
-          ) : (
-            <div style={{ fontSize: 36, textAlign: 'center' }}>{quizWord.scene_emoji}</div>
           )}
         </div>
       )}
@@ -473,8 +470,7 @@ export default function Home() {
               background: learned.has(w.id) ? '#f0faf5' : i === current ? '#fdf0ee' : s.bg,
               cursor: 'pointer', textAlign: 'center' as const,
               fontFamily: gridView === 'chinese' ? 'serif' : 'Calibri, "Trebuchet MS", "Arial Unicode MS", Georgia, serif',
-              fontSize: gridView === 'chinese' ? 14 : 14,
-              color: s.text, fontWeight: 700,
+              fontSize: 14, color: s.text, fontWeight: 700,
               overflow: 'hidden', wordBreak: 'break-word' as const
             }}>
               {gridView === 'chinese' ? w.chinese : gridView === 'pinyin' ? w.pinyin : w.english}
@@ -491,19 +487,29 @@ export default function Home() {
             <div style={{ fontSize: 16, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>Memorize Mandarin</div>
             <div style={{ fontSize: 11, color: s.muted, fontFamily: 'Georgia, serif' }}>Mandarin vocabulary with mnemonics</div>
           </div>
-          <button onClick={() => setGridOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.brown, padding: '4px 0 4px 8px' }}>
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <circle cx="3" cy="3" r="1.5" fill="currentColor"/>
-              <circle cx="9" cy="3" r="1.5" fill="currentColor"/>
-              <circle cx="15" cy="3" r="1.5" fill="currentColor"/>
-              <circle cx="3" cy="9" r="1.5" fill="currentColor"/>
-              <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
-              <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
-              <circle cx="3" cy="15" r="1.5" fill="currentColor"/>
-              <circle cx="9" cy="15" r="1.5" fill="currentColor"/>
-              <circle cx="15" cy="15" r="1.5" fill="currentColor"/>
-            </svg>
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button onClick={() => setShuffle(!shuffle)} style={{
+              background: 'none', border: `1px solid ${shuffle ? s.red : s.border}`,
+              borderRadius: 6, cursor: 'pointer',
+              color: shuffle ? s.red : s.brown,
+              padding: '4px 8px', fontSize: 11, fontFamily: 'Georgia, serif'
+            }}>
+              {shuffle ? '🔀 On' : '🔀'}
+            </button>
+            <button onClick={() => setGridOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.brown, padding: '4px 0 4px 4px' }}>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="3" cy="3" r="1.5" fill="currentColor"/>
+                <circle cx="9" cy="3" r="1.5" fill="currentColor"/>
+                <circle cx="15" cy="3" r="1.5" fill="currentColor"/>
+                <circle cx="3" cy="9" r="1.5" fill="currentColor"/>
+                <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
+                <circle cx="3" cy="15" r="1.5" fill="currentColor"/>
+                <circle cx="9" cy="15" r="1.5" fill="currentColor"/>
+                <circle cx="15" cy="15" r="1.5" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         {loading ? (
@@ -519,9 +525,8 @@ export default function Home() {
 
                 {/* Front */}
                 <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${isLearned ? s.green : s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 320, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>{isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}</div>
-                    <div style={{ fontSize: 10, letterSpacing: 1, color: s.lightbrown, textTransform: 'uppercase', background: '#f5ede4', padding: '3px 10px', borderRadius: 4 }}>{word.topic}</div>
                   </div>
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: 72, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 12, fontFamily: 'serif' }}>{word.chinese}</div>
@@ -536,9 +541,8 @@ export default function Home() {
 
                 {/* Back */}
                 <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${isLearned ? s.green : s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 320, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>{isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}</div>
-                    <div style={{ fontSize: 10, letterSpacing: 1, color: s.lightbrown, textTransform: 'uppercase', background: '#f5ede4', padding: '3px 10px', borderRadius: 4 }}>{word.topic}</div>
                   </div>
                   <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ fontSize: 48, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 8, fontFamily: 'serif' }}>{word.chinese}</div>
@@ -548,10 +552,8 @@ export default function Home() {
                   <div style={{ borderTop: `1px solid ${s.border}`, paddingTop: '1.25rem' }}>
                     <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
                     <div style={{ fontSize: 15, lineHeight: 1.8, color: '#3d2010', marginBottom: '1.25rem' }}>{word.mnemonic}</div>
-                    {word.image_url ? (
+                    {word.image_url && (
                       <img src={word.image_url} alt={word.english} style={{ width: '100%', borderRadius: 8, objectFit: 'cover', maxHeight: 200 }} />
-                    ) : (
-                      <div style={{ fontSize: 44, textAlign: 'center', padding: '1.25rem', background: '#f5ede4', borderRadius: 8 }}>{word.scene_emoji}</div>
                     )}
                   </div>
                 </div>
