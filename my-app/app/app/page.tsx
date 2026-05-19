@@ -110,8 +110,13 @@ export default function Home() {
   async function markLearned() {
     const word = words[current]
     if (!user || !word) return
-    await supabase.from('progress').upsert({ user_id: user.id, vocabulary_id: word.id, learned: true, last_seen: new Date().toISOString() }, { onConflict: 'user_id,vocabulary_id' })
-    setLearned(prev => new Set([...prev, word.id]))
+    if (learned.has(word.id)) {
+      await supabase.from('progress').delete().eq('user_id', user.id).eq('vocabulary_id', word.id)
+      setLearned(prev => { const next = new Set(prev); next.delete(word.id); return next })
+    } else {
+      await supabase.from('progress').upsert({ user_id: user.id, vocabulary_id: word.id, learned: true, last_seen: new Date().toISOString() }, { onConflict: 'user_id,vocabulary_id' })
+      setLearned(prev => new Set([...prev, word.id]))
+    }
     fetchProgress()
   }
 
@@ -154,7 +159,7 @@ export default function Home() {
 
   function next() { setFlipped(false); setTimeout(() => setCurrent(i => shuffle ? Math.floor(Math.random() * words.length) : (i + 1) % words.length), 150) }
   function prev() { setFlipped(false); setTimeout(() => setCurrent(i => shuffle ? Math.floor(Math.random() * words.length) : (i - 1 + words.length) % words.length), 150) }
-  function saveWord() { const word = words[current]; if (!saved.find(w => w.id === word.id)) setSaved([...saved, word]) }
+  function saveWord() { const word = words[current]; if (saved.find(w => w.id === word.id)) setSaved(saved.filter(w => w.id !== word.id)); else setSaved([...saved, word]) }
   function removeWord(id: number) { setSaved(saved.filter(w => w.id !== id)) }
   function playAudio(url: string, e: React.MouseEvent) { e.stopPropagation(); new Audio(url).play() }
 
@@ -172,7 +177,8 @@ export default function Home() {
   const s = {
     bg: '#f7f3ee', card: '#fffdf8', border: '#e8ddd0',
     red: '#c0392b', brown: '#5a3a2a', lightbrown: '#b08060',
-    text: '#2d1810', muted: '#8b5a3a', green: '#2c7a4b'
+    text: '#2d1810', muted: '#8b5a3a', green: '#2c7a4b',
+    blue: '#1a5a8a'
   }
 
   if (!authChecked) return null
@@ -487,29 +493,19 @@ export default function Home() {
             <div style={{ fontSize: 16, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>Memorize Mandarin</div>
             <div style={{ fontSize: 11, color: s.muted, fontFamily: 'Georgia, serif' }}>Mandarin vocabulary with mnemonics</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button onClick={() => setShuffle(!shuffle)} style={{
-              background: 'none', border: `1px solid ${shuffle ? s.red : s.border}`,
-              borderRadius: 6, cursor: 'pointer',
-              color: shuffle ? s.red : s.brown,
-              padding: '4px 8px', fontSize: 11, fontFamily: 'Georgia, serif'
-            }}>
-              {shuffle ? '🔀 On' : '🔀'}
-            </button>
-            <button onClick={() => setGridOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.brown, padding: '4px 0 4px 4px' }}>
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <circle cx="3" cy="3" r="1.5" fill="currentColor"/>
-                <circle cx="9" cy="3" r="1.5" fill="currentColor"/>
-                <circle cx="15" cy="3" r="1.5" fill="currentColor"/>
-                <circle cx="3" cy="9" r="1.5" fill="currentColor"/>
-                <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
-                <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
-                <circle cx="3" cy="15" r="1.5" fill="currentColor"/>
-                <circle cx="9" cy="15" r="1.5" fill="currentColor"/>
-                <circle cx="15" cy="15" r="1.5" fill="currentColor"/>
-              </svg>
-            </button>
-          </div>
+          <button onClick={() => setGridOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.brown, padding: '4px 0 4px 4px' }}>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <circle cx="3" cy="3" r="1.5" fill="currentColor"/>
+              <circle cx="9" cy="3" r="1.5" fill="currentColor"/>
+              <circle cx="15" cy="3" r="1.5" fill="currentColor"/>
+              <circle cx="3" cy="9" r="1.5" fill="currentColor"/>
+              <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+              <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
+              <circle cx="3" cy="15" r="1.5" fill="currentColor"/>
+              <circle cx="9" cy="15" r="1.5" fill="currentColor"/>
+              <circle cx="15" cy="15" r="1.5" fill="currentColor"/>
+            </svg>
+          </button>
         </div>
 
         {loading ? (
@@ -553,8 +549,9 @@ export default function Home() {
                     <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
                     <div style={{ fontSize: 15, lineHeight: 1.8, color: '#3d2010', marginBottom: '1.25rem' }}>{word.mnemonic}</div>
                     {word.image_url && (
-                      <img src={word.image_url} alt={word.english} style={{ width: '100%', borderRadius: 8, objectFit: 'cover', maxHeight: 200 }} />
+                      <img src={word.image_url} alt={word.english} style={{ width: '100%', borderRadius: 8, objectFit: 'contain', maxHeight: 200, mixBlendMode: 'multiply' }} />
                     )}
+                    <div style={{ textAlign: 'center', fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '1.5rem' }}>tap to return</div>
                   </div>
                 </div>
 
@@ -565,6 +562,9 @@ export default function Home() {
               <button onClick={prev} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', fontSize: 20, color: s.brown }}>←</button>
               <button onClick={saveWord} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${isSaved ? s.red : s.border}`, background: isSaved ? '#fdf0ee' : s.card, cursor: 'pointer', fontSize: 13, color: isSaved ? s.red : s.brown, fontFamily: 'Georgia, serif' }}>
                 {isSaved ? 'Saved ✓' : 'Save'}
+              </button>
+              <button onClick={() => setShuffle(!shuffle)} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${shuffle ? s.blue : s.border}`, background: shuffle ? '#e8f0fa' : s.card, cursor: 'pointer', fontSize: 13, color: shuffle ? s.blue : s.brown, fontFamily: 'Georgia, serif' }}>
+                {shuffle ? 'Shuffle ✓' : 'Shuffle'}
               </button>
               {user && (
                 <button onClick={markLearned} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${isLearned ? s.green : s.border}`, background: isLearned ? '#f0faf5' : s.card, cursor: 'pointer', fontSize: 13, color: isLearned ? s.green : s.brown, fontFamily: 'Georgia, serif' }}>
