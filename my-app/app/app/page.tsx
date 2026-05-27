@@ -410,9 +410,10 @@ export default function Home() {
         <div style={{ fontSize: 11, color: s.red, letterSpacing: 3, marginBottom: '1.5rem' }}>普通话词汇助手</div>
 
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, marginBottom: 10, textTransform: 'uppercase' }}>HSK Level</div>
-        {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => (
-          <button key={level} onClick={() => { setHskLevel(level); setMenuOpen(false) }} style={{ ...menuBtn, borderColor: hskLevel === level ? s.red : s.border, background: hskLevel === level ? s.red : 'transparent', color: hskLevel === level ? '#fff' : s.brown }}>
-            {level === 'all' ? 'All words' : `HSK ${level}`}
+        {(['all', 1, 2, 3] as any[]).map(level => (
+          <button key={level} onClick={() => { if (level !== 2 && level !== 3) { setHskLevel(level); setMenuOpen(false) } }} style={{ ...menuBtn, borderColor: hskLevel === level ? s.red : s.border, background: hskLevel === level ? s.red : 'transparent', color: hskLevel === level ? '#fff' : s.brown, cursor: level === 2 || level === 3 ? 'default' : 'pointer', opacity: level === 2 || level === 3 ? 0.7 : 1 }}>
+            <span>{level === 'all' ? 'All words' : `HSK ${level}`}</span>
+            {(level === 2 || level === 3) && <span style={{ fontSize: 10, color: s.red, marginLeft: 8, letterSpacing: 1, fontWeight: 900 }}>COMING SOON</span>}
           </button>
         ))}
 

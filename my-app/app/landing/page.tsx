@@ -26,7 +26,7 @@ export default function Landing() {
     { emoji: '📖', title: 'Flashcard learning', desc: 'Browse words by HSK level at your own pace. Tap to reveal the mnemonic and save words you want to revisit.' },
     { emoji: '🧪', title: 'Quiz yourself', desc: 'Test your knowledge with multiple choice quizzes. Track your score and streak as you go.' },
     { emoji: '📈', title: 'Track progress', desc: 'Mark words as learned and watch your progress bars fill up across each HSK level.' },
-    { emoji: '🎯', title: 'HSK aligned', desc: 'Content is organised by HSK levels 1-6, the international standard for Mandarin proficiency.' },
+    { emoji: '🎯', title: 'HSK aligned', desc: 'Content follows the HSK standard, the international benchmark for Mandarin proficiency. HSK1 is available now, with more levels coming soon.' },
   ]
 
   const examples = [
@@ -43,7 +43,7 @@ export default function Landing() {
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => router.push('/auth')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign in</button>
           <button onClick={() => router.push('/demo')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Try free</button>
-          <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Get full access</button>
+          <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Get HSK1 full access: £1/month</button>
         </div>
       </nav>
 
@@ -58,9 +58,9 @@ export default function Landing() {
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try for free</button>
-          <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Get full access</button>
+          <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Get HSK1 full access: £1/month</button>
         </div>
-        <div style={{ fontSize: 12, color: s.muted, marginTop: 12 }}>Cancel anytime. No commitment.</div>
+        <div style={{ fontSize: 12, color: s.muted, marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
       </section>
 
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 2rem 5rem' }}>
@@ -133,15 +133,15 @@ export default function Landing() {
             Try for free
           </button>
           <button onClick={handleSubscribe} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: '#fff', color: s.red, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
-            Get full access
+            Get HSK1 full access: £1/month
           </button>
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>Cancel anytime. No commitment.</div>
+        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
       </section>
 
       <footer style={{ background: s.card, borderTop: '1px solid #e8ddd0', padding: '2rem', textAlign: 'center' }}>
         <img src="/seal.svg" height="60" alt="Memorize Mandarin" style={{ marginBottom: 8 }} />
-        <div style={{ fontSize: 12, color: s.lightbrown }}>Mandarin vocabulary with mnemonics · HSK 1-6</div>
+        <div style={{ fontSize: 12, color: s.lightbrown }}>Mandarin vocabulary with mnemonics · HSK1 available now</div>
       </footer>
     </div>
   )
