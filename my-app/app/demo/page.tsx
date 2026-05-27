@@ -13,6 +13,17 @@ type Word = {
 
 export default function Demo() {
   const router = useRouter()
+
+  async function handleSubscribe() {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: '' }),
+    })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
+  }
+
   const [words, setWords] = useState<Word[]>([])
   const [current, setCurrent] = useState(0)
   const [flipped, setFlipped] = useState(false)
@@ -78,8 +89,8 @@ export default function Demo() {
           Create a free account to unlock the full word list, track your progress, and never forget a word again!
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
-          <button onClick={() => router.push('/auth')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
-            Create free account
+          <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
+            Get HSK1 full access: £1/month
           </button>
           <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false) }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>
             Learn again
@@ -94,7 +105,7 @@ export default function Demo() {
     <div style={{ minHeight: '100vh', background: s.bg, fontFamily: 'Georgia, serif' }}>
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: `1px solid ${s.border}`, background: s.card }}>
         <img src="/seal.svg" height="40" alt="Memorize Mandarin" />
-        <button onClick={() => router.push('/auth')} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Create free account</button>
+        <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Get HSK1 full access: £1/month</button>
       </nav>
 
       <div style={{ maxWidth: 580, margin: '0 auto', padding: '2rem 1.5rem' }}>
@@ -149,8 +160,8 @@ export default function Demo() {
 
         <div style={{ textAlign: 'center', padding: '1rem', background: '#fdf0ee', borderRadius: 8, border: `1px solid #e8c0b8` }}>
           <span style={{ fontSize: 13, color: s.red }}>✨ Enjoying this? </span>
-          <button onClick={() => router.push('/auth')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontWeight: 700, fontFamily: 'Georgia, serif', textDecoration: 'underline' }}>Create a free account</button>
-          <span style={{ fontSize: 13, color: s.red }}> to unlock the full word list.</span>
+          <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontWeight: 700, fontFamily: 'Georgia, serif', textDecoration: 'underline' }}>Get full access for £1/month</button>
+          <span style={{ fontSize: 13, color: s.red }}>: HSK1 full word list.</span>
         </div>
       </div>
     </div>
