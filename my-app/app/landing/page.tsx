@@ -20,9 +20,9 @@ export default function Landing() {
   ]
 
   const examples = [
-    { chinese: '老板', pinyin: 'lǎo bǎn', english: 'Boss', mnemonic: 'You hear a LOUD BANG and your boss dramatically appears in a cloud of smoke!', emoji: '💥', audio: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/audio/2.mp3' },
-    { chinese: '你好', pinyin: 'nǐ hǎo', english: 'Hello', mnemonic: 'You knock your KNEE on a table and say HOW embarrassing - that is how you greet everyone!', emoji: '🦵', audio: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/audio/1.mp3' },
-    { chinese: '谢谢', pinyin: 'xiè xiè', english: 'Thank you', mnemonic: 'You SHAY SHAY your hips in a thank you dance!', emoji: '🕺', audio: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/audio/4.mp3' },
+    { chinese: '你好', pinyin: 'nǐ hǎo', english: 'hello', mnemonic: 'You knock your KNEE on a table and say HOW embarrassing - that\'s how you say HELLO.', image: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/images/147.png', audio: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/audio/147.mp3'},
+    { chinese: '包子', pinyin: 'bāo zi', english: 'steamed stuffed bun', mnemonic: 'She BOWS and is handed a large STEAMED STUFFED BUN.', image: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/images/8.png', audio: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/audio/8.mp3'},
+    { chinese: '做饭', pinyin: 'zuò fàn', english: 'to cook', mnemonic: 'A chef uses a SAW on a spinning FAN to chop vegetables, because he\'s trying to COOK.', image: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/images/300.png', audio: 'https://tfgdctbuhsoflecjymvw.supabase.co/storage/v1/object/public/audio/300.mp3'},
   ]
 
   return (
@@ -32,7 +32,7 @@ export default function Landing() {
         <img src="/seal.svg" height="50" alt="Memorize Mandarin" />
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => router.push('/auth')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign in</button>
-          <button onClick={() => router.push('/app')} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try free</button>
+          <button onClick={() => router.push('/demo')} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try free</button>
         </div>
       </nav>
 
@@ -46,7 +46,7 @@ export default function Landing() {
           Most vocabulary apps rely on repetition. Memorize Mandarin uses mnemonic stories - vivid, absurd scenes that make words unforgettable from the first read.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button onClick={() => router.push('/app')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Start learning free</button>
+          <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Start learning free</button>
           <button onClick={() => router.push('/auth')} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Create account</button>
         </div>
       </section>
@@ -56,7 +56,7 @@ export default function Landing() {
         <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, textAlign: 'center', marginBottom: '2.5rem' }}>Every word has a story</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
           {examples.map((ex, i) => (
-            <div key={i} style={{ background: s.card, border: '1px solid #e8ddd0', borderTop: '3px solid #c0392b', borderRadius: 12, padding: '1.5rem' }}>
+            <div key={i} style={{ background: s.card, border: '1px solid #e8ddd0', borderTop: '3px solid #c0392b', borderRadius: 12, padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
               <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
                 <div style={{ fontSize: 48, fontWeight: 700, color: s.text, fontFamily: 'serif', lineHeight: 1, marginBottom: 6 }}>{ex.chinese}</div>
                 <div style={{ fontSize: 16, color: s.muted, marginBottom: 4, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{ex.pinyin}</div>
@@ -68,7 +68,9 @@ export default function Landing() {
               <hr style={{ border: 'none', borderTop: '1px solid #e8ddd0', margin: '1rem 0' }} />
               <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 6, textTransform: 'uppercase' }}>Mnemonic</div>
               <div style={{ fontSize: 14, color: s.text, lineHeight: 1.7, marginBottom: 12 }}>{ex.mnemonic}</div>
-              <div style={{ fontSize: 32, textAlign: 'center', padding: '0.75rem', background: '#f5ede4', borderRadius: 8 }}>{ex.emoji}</div>
+              <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
+                {ex.image && <img src={ex.image} alt={ex.english} style={{ width: '100%', borderRadius: 8, objectFit: 'contain', maxHeight: 160, mixBlendMode: 'multiply' }} />}
+              </div>
             </div>
           ))}
         </div>
@@ -113,8 +115,8 @@ export default function Landing() {
       <section style={{ background: s.red, padding: '5rem 2rem', textAlign: 'center' }}>
         <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', letterSpacing: 4, marginBottom: 12 }}>记 · REMEMBER</div>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Start remembering Mandarin today</h2>
-        <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', marginBottom: '2rem' }}>Free to use. No credit card required.</p>
-        <button onClick={() => router.push('/app')} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: '#fff', color: s.red, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
+        <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', marginBottom: '2rem' }}></p>
+        <button onClick={() => router.push('/demo')} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: '#fff', color: s.red, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
           Start learning free
         </button>
       </section>
