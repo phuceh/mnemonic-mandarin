@@ -60,7 +60,7 @@ export default function Landing() {
           <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try for free</button>
           <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Get HSK1 full access: £1/month</button>
         </div>
-        <div style={{ fontSize: 12, color: s.muted, marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
+        <div style={{ fontSize: 14, color: s.muted, marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
       </section>
 
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 2rem 5rem' }}>
@@ -136,7 +136,7 @@ export default function Landing() {
             Get HSK1 full access: £1/month
           </button>
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
+        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
       </section>
 
       <footer style={{ background: s.card, borderTop: '1px solid #e8ddd0', padding: '2rem', textAlign: 'center' }}>
