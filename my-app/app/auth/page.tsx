@@ -1,10 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true)
+  const searchParams = useSearchParams()
+  const subscribed = searchParams.get('subscribed') === 'true'
+  const [isLogin, setIsLogin] = useState(!subscribed)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -34,10 +36,13 @@ export default function AuthPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{ fontSize: 11, color: s.red, letterSpacing: 4, marginBottom: 8 }}>普通话词汇助手</div>
-        <h1 style={{ fontSize: 36, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>记 · Remember</h1>
-      </div>
+      <img src="/seal.svg" height="80" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem' }} />
+
+      {subscribed && !isLogin && (
+        <div style={{ width: '100%', maxWidth: 400, background: '#f0faf5', border: '1px solid #2c7a4b', borderRadius: 10, padding: '1rem 1.25rem', marginBottom: '1rem', textAlign: 'center' }}>
+          <div style={{ fontSize: 14, color: '#2c7a4b', fontFamily: 'Georgia, serif' }}>🎉 Payment confirmed! Create your account to get started.</div>
+        </div>
+      )}
 
       <div style={{ width: '100%', maxWidth: 400, background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2rem' }}>
         <h2 style={{ fontSize: 22, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: '1.5rem' }}>
@@ -90,6 +95,22 @@ export default function AuthPage() {
           {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
         </button>
       </div>
+
+      {isLogin && (
+        <div style={{ marginTop: 16, fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif', textAlign: 'center' }}>
+          New here? <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontFamily: 'Georgia, serif', textDecoration: 'underline' }}>Get full access for £1/month</button>
+        </div>
+      )}
     </div>
   )
+
+  async function handleSubscribe() {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: '' }),
+    })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
+  }
 }

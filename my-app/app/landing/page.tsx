@@ -4,6 +4,16 @@ import { useRouter } from 'next/navigation'
 export default function Landing() {
   const router = useRouter()
 
+  async function handleSubscribe() {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: '' }),
+    })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
+  }
+
   const s = {
     bg: '#f7f3ee', card: '#fffdf8', border: '#e8ddd0',
     red: '#c0392b', brown: '#5a3a2a', lightbrown: '#b08060',
@@ -32,7 +42,8 @@ export default function Landing() {
         <img src="/seal.svg" height="50" alt="Memorize Mandarin" />
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => router.push('/auth')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign in</button>
-          <button onClick={() => router.push('/demo')} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try free</button>
+          <button onClick={() => router.push('/demo')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Try free</button>
+          <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Get full access</button>
         </div>
       </nav>
 
@@ -46,9 +57,10 @@ export default function Landing() {
           Most vocabulary apps rely on repetition. Memorize Mandarin uses mnemonic stories - vivid, absurd scenes that make words unforgettable from the first read.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Start learning free</button>
-          <button onClick={() => router.push('/auth')} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Create account</button>
+          <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try for free</button>
+          <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Get full access</button>
         </div>
+        <div style={{ fontSize: 12, color: s.muted, marginTop: 12 }}>Cancel anytime. No commitment.</div>
       </section>
 
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 2rem 5rem' }}>
@@ -116,9 +128,15 @@ export default function Landing() {
         <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', letterSpacing: 4, marginBottom: 12 }}>记 · REMEMBER</div>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Start remembering Mandarin today</h2>
         <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', marginBottom: '2rem' }}></p>
-        <button onClick={() => router.push('/demo')} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: '#fff', color: s.red, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
-          Start learning free
-        </button>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button onClick={() => router.push('/demo')} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: 'transparent', color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>
+            Try for free
+          </button>
+          <button onClick={handleSubscribe} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: '#fff', color: s.red, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
+            Get full access
+          </button>
+        </div>
+        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>Cancel anytime. No commitment.</div>
       </section>
 
       <footer style={{ background: s.card, borderTop: '1px solid #e8ddd0', padding: '2rem', textAlign: 'center' }}>
