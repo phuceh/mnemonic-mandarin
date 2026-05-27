@@ -1,9 +1,9 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, Suspense } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function AuthPage() {
+function AuthForm() {
   const searchParams = useSearchParams()
   const subscribed = searchParams.get('subscribed') === 'true'
   const [isLogin, setIsLogin] = useState(!subscribed)
@@ -32,6 +32,16 @@ export default function AuthPage() {
       else setMessage('Check your email to confirm your account!')
     }
     setLoading(false)
+  }
+
+  async function handleSubscribe() {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: '' }),
+    })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
   }
 
   return (
@@ -103,14 +113,12 @@ export default function AuthPage() {
       )}
     </div>
   )
+}
 
-  async function handleSubscribe() {
-    const res = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: '' }),
-    })
-    const data = await res.json()
-    if (data.url) window.location.href = data.url
-  }
+export default function AuthPage() {
+  return (
+    <Suspense>
+      <AuthForm />
+    </Suspense>
+  )
 }
