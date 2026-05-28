@@ -68,7 +68,6 @@ export default function Home() {
     })
     supabase.auth.onAuthStateChange((_, session) => {
       setUser(session?.user ?? null)
-      setAuthChecked(true)
     })
   }, [])
 
