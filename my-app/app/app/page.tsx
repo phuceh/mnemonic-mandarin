@@ -113,11 +113,18 @@ export default function Home() {
     if (learned.has(word.id)) {
       await supabase.from('progress').delete().eq('user_id', user.id).eq('vocabulary_id', word.id)
       setLearned(prev => { const next = new Set(prev); next.delete(word.id); return next })
+      setProgress(prev => {
+        const lvl = word.hsk_level
+        return { ...prev, [lvl]: { ...prev[lvl], learned: Math.max(0, (prev[lvl]?.learned ?? 1) - 1) } }
+      })
     } else {
       await supabase.from('progress').upsert({ user_id: user.id, vocabulary_id: word.id, learned: true, last_seen: new Date().toISOString() }, { onConflict: 'user_id,vocabulary_id' })
       setLearned(prev => new Set([...prev, word.id]))
+      setProgress(prev => {
+        const lvl = word.hsk_level
+        return { ...prev, [lvl]: { ...prev[lvl], learned: (prev[lvl]?.learned ?? 0) + 1 } }
+      })
     }
-    fetchProgress()
   }
 
   async function startQuiz() {
@@ -405,9 +412,14 @@ export default function Home() {
 
       {/* Side menu */}
       <div style={{ position: 'fixed', top: 0, left: 0, height: '100vh', width: 256, background: '#fdf8f2', borderRight: `1px solid ${s.border}`, zIndex: 20, transform: menuOpen ? 'translateX(0)' : 'translateX(-100%)', transition: 'transform 0.25s ease', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-        <button onClick={() => { setMenuOpen(false); setMode('home') }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.muted, fontSize: 13, textAlign: 'left' as const, marginBottom: '1.5rem', fontFamily: 'Georgia, serif' }}>← Home</button>
-        <div style={{ fontSize: 22, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 4 }}>Memorize Mandarin</div>
-        <div style={{ fontSize: 11, color: s.red, letterSpacing: 3, marginBottom: '1.5rem' }}>普通话词汇助手</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.5rem' }}>
+          <img src="/seal.svg" height="36" alt="Memorize Mandarin" />
+          <div style={{ fontSize: 18, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>Memorize Mandarin</div>
+        </div>
+
+        <button onClick={() => { setMenuOpen(false); setMode('home') }} style={{ ...menuBtn, borderColor: s.border, background: 'transparent', color: s.brown, marginBottom: '1.5rem' }}>
+          Home
+        </button>
 
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, marginBottom: 10, textTransform: 'uppercase' }}>HSK Level</div>
         {(['all', 1, 2, 3] as any[]).map(level => (
@@ -520,34 +532,36 @@ export default function Home() {
           </div>
         ) : word ? (
           <>
-            <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 320 }}>
+            <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 380 }}>
               <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
 
                 {/* Front */}
-                <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${isLearned ? s.green : s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 320, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.5rem' }}>
-                    <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>{isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}</div>
+                    <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase' }}>{`HSK ${word.hsk_level}`}</div>
                   </div>
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: 72, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 12, fontFamily: 'serif' }}>{word.chinese}</div>
                     <div style={{ fontSize: 22, color: s.muted, marginBottom: 6, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{word.pinyin}</div>
                     <div style={{ fontSize: 16, color: s.lightbrown, letterSpacing: 1, marginBottom: 16, textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>{word.english}</div>
+                  </div>
+                  <div style={{ textAlign: 'center', marginTop: 'auto', paddingTop: '1rem' }}>
                     {word.audio_url && (
                       <button onClick={(e) => playAudio(word.audio_url, e)} style={{ padding: '7px 20px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif' }}>🔊 Listen</button>
                     )}
+                    <div style={{ fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '1rem' }}>tap to reveal mnemonic</div>
                   </div>
-                  <div style={{ textAlign: 'center', fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '2rem' }}>tap to reveal mnemonic</div>
                 </div>
 
                 {/* Back */}
-                <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${isLearned ? s.green : s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 320, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
+                <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.5rem' }}>
-                    <div style={{ fontSize: 10, letterSpacing: 2, color: isLearned ? s.green : s.red, textTransform: 'uppercase' }}>{isLearned ? '✓ Learned' : `HSK ${word.hsk_level}`}</div>
+                    <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase' }}>{`HSK ${word.hsk_level}`}</div>
                   </div>
                   <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ fontSize: 48, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 8, fontFamily: 'serif' }}>{word.chinese}</div>
                     <div style={{ fontSize: 18, color: s.muted, marginBottom: 4, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{word.pinyin}</div>
-                    <div style={{ fontSize: 14, color: s.lightbrown, letterSpacing: 1, textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>{word.english}</div>
+                    <div style={{ fontSize: 16, color: s.lightbrown, letterSpacing: 1, textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>{word.english}</div>
                   </div>
                   <div style={{ borderTop: `1px solid ${s.border}`, paddingTop: '1.25rem' }}>
                     <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
@@ -577,7 +591,24 @@ export default function Home() {
               )}
               <button onClick={next} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', fontSize: 20, color: s.brown }}>→</button>
             </div>
-            <div style={{ textAlign: 'center', fontSize: 12, color: '#c8a888', letterSpacing: 1 }}>{current + 1} / {words.length}</div>
+            <div style={{ textAlign: 'center', fontSize: 12, color: '#c8a888', letterSpacing: 1, marginBottom: '1rem' }}>{current + 1} / {words.length}</div>
+            {user && (
+              <div style={{ marginTop: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <span style={{ fontSize: 11, color: s.lightbrown, fontFamily: 'Georgia, serif' }}>{hskLevel === 'all' ? 'Learned' : `HSK ${hskLevel} learned`}</span>
+                  <span style={{ fontSize: 11, color: s.lightbrown, fontFamily: 'Georgia, serif' }}>
+                    {hskLevel === 'all'
+                      ? `${Object.values(progress).reduce((a, b) => a + b.learned, 0)} / ${Object.values(progress).reduce((a, b) => a + b.total, 0)}`
+                      : `${progress[hskLevel]?.learned ?? 0} / ${progress[hskLevel]?.total ?? 0}`}
+                  </span>
+                </div>
+                <div style={{ height: 4, background: s.border, borderRadius: 2 }}>
+                  <div style={{ height: '100%', background: s.green, borderRadius: 2, width: `${hskLevel === 'all'
+                    ? (Object.values(progress).reduce((a, b) => a + b.learned, 0) / Math.max(Object.values(progress).reduce((a, b) => a + b.total, 0), 1)) * 100
+                    : ((progress[hskLevel]?.learned ?? 0) / Math.max(progress[hskLevel]?.total ?? 1, 1)) * 100}%`, transition: 'width 0.5s' }} />
+                </div>
+              </div>
+            )}
           </>
         ) : null}
       </main>

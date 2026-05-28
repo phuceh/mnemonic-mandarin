@@ -97,13 +97,6 @@ function AuthForm() {
           {loading ? 'Loading...' : isLogin ? 'Sign in →' : 'Create account →'}
         </button>
 
-        <button onClick={() => { setIsLogin(!isLogin); setMessage('') }} style={{
-          width: '100%', padding: '10px', borderRadius: 8,
-          background: 'transparent', border: `1px solid ${s.border}`,
-          color: s.muted, fontSize: 14, fontFamily: 'Georgia, serif', cursor: 'pointer'
-        }}>
-          {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
-        </button>
       </div>
 
       {isLogin && (
