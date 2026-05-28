@@ -47,7 +47,7 @@ export default function Demo() {
     supabase
       .from('vocabulary')
       .select('word_id, chinese, pinyin, english, mnemonic')
-      .in('word_id', [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
+      .in('word_id', [1,3,17,46,55,62,69,87,105,107,119,148,159,170,191,208,224,234,269,295])
       .order('word_id')
       .then(({ data }) => {
         setWords(data || [])
