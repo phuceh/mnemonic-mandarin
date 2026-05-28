@@ -44,7 +44,7 @@ export default function Landing() {
   ]
 
   return (
-    <div style={{ background: s.bg, minHeight: '100vh', fontFamily: 'Georgia, serif' }}>
+    <div style={{ background: s.bg, minHeight: '100vh' }}>
 
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: '1px solid #e8ddd0', background: s.card, position: 'sticky', top: 0, zIndex: 100 }}>
         <img src="/seal.svg" height="50" alt="Memorize Mandarin" />
@@ -57,7 +57,7 @@ export default function Landing() {
 
       <section style={{ maxWidth: 720, margin: '0 auto', padding: '2rem 2rem 4rem', textAlign: 'center' }}>
         <img src="/logo.svg" height="180" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem' }} />
-        <h1 style={{ fontSize: 52, fontWeight: 700, color: s.text, lineHeight: 1.1, letterSpacing: '-1.5px', marginBottom: '1.25rem' }}>
+        <h1 style={{ fontSize: 52, fontWeight: 700, color: s.text, lineHeight: 1.1, letterSpacing: '-1.5px', marginBottom: '1.25rem', fontFamily: '"Playfair Display", Georgia, serif' }}>
           Remember Mandarin<br />
           <span style={{ color: s.red }}>words that actually stick</span>
         </h1>
@@ -73,7 +73,7 @@ export default function Landing() {
 
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 2rem 5rem' }}>
         <div style={{ fontSize: 10, letterSpacing: 3, color: s.red, textTransform: 'uppercase', textAlign: 'center', marginBottom: '1rem' }}>See it in action</div>
-        <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, textAlign: 'center', marginBottom: '2.5rem' }}>Every word has a story</h2>
+        <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, textAlign: 'center', marginBottom: '2.5rem', fontFamily: '"Playfair Display", Georgia, serif' }}>Every word has a story</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
           {examples.map((ex, i) => (
             <div key={i} style={{ background: s.card, border: '1px solid #e8ddd0', borderTop: '3px solid #c0392b', borderRadius: 12, padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
@@ -99,7 +99,7 @@ export default function Landing() {
       <section style={{ background: s.card, borderTop: '1px solid #e8ddd0', borderBottom: '1px solid #e8ddd0', padding: '5rem 2rem' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <div style={{ fontSize: 10, letterSpacing: 3, color: s.red, textTransform: 'uppercase', textAlign: 'center', marginBottom: '1rem' }}>Everything you need</div>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, textAlign: 'center', marginBottom: '3rem' }}>Built for real learning</h2>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, textAlign: 'center', marginBottom: '3rem', fontFamily: '"Playfair Display", Georgia, serif' }}>Built for real learning</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
             {features.map((f, i) => (
               <div key={i} style={{ padding: '1.5rem', borderRadius: 12, border: '1px solid #e8ddd0', background: s.bg }}>
@@ -114,10 +114,10 @@ export default function Landing() {
 
       <section style={{ maxWidth: 720, margin: '0 auto', padding: '5rem 2rem' }}>
         <div style={{ fontSize: 10, letterSpacing: 3, color: s.red, textTransform: 'uppercase', textAlign: 'center', marginBottom: '1rem' }}>The method</div>
-        <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, textAlign: 'center', marginBottom: '3rem' }}>Why mnemonics work</h2>
+        <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, textAlign: 'center', marginBottom: '3rem', fontFamily: '"Playfair Display", Georgia, serif' }}>Why mnemonics work</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {[
-            { num: '01', title: 'Hear the sound', desc: 'Each Mandarin syllable is mapped to a familiar English sound hook — something you already know.' },
+            { num: '01', title: 'Hear the sound', desc: 'Each Mandarin syllable is mapped to a familiar English sound hook - something you already know.' },
             { num: '02', title: 'Picture the scene', desc: 'The sound hook becomes part of a vivid, absurd story. The stranger the scene, the better your brain remembers it.' },
             { num: '03', title: 'Lock it in', desc: 'Quiz yourself to reinforce the memory. Mark words as learned and track your progress across HSK levels.' },
           ].map((step, i) => (
@@ -134,7 +134,7 @@ export default function Landing() {
 
       <section style={{ background: s.red, padding: '5rem 2rem', textAlign: 'center' }}>
         <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', letterSpacing: 4, marginBottom: 12 }}>记 · REMEMBER</div>
-        <h2 style={{ fontSize: 36, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Start remembering Mandarin today</h2>
+        <h2 style={{ fontSize: 36, fontWeight: 700, color: '#fff', marginBottom: 12, fontFamily: '"Playfair Display", Georgia, serif' }}>Start remembering Mandarin today</h2>
         <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', marginBottom: '2rem' }}></p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <button onClick={() => router.push('/demo')} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: 'transparent', color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>

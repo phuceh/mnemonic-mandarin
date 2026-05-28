@@ -6,7 +6,11 @@
 
 body {
   background: #f7f3ee;
-  font-family: 'Georgia', serif;
+  font-family: 'Lora', Georgia, serif;
+}
+
+* {
+  font-family: 'Lora', Georgia, serif;
 }
 
 .flip-card {
