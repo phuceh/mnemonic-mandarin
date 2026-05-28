@@ -61,10 +61,10 @@ export default function Home() {
           return
         }
         setUser(data.user)
+        setAuthChecked(true)
       } else {
         router.push('/auth')
       }
-      setAuthChecked(true)
     })
     supabase.auth.onAuthStateChange((_, session) => {
       setUser(session?.user ?? null)
