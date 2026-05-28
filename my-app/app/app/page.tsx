@@ -48,8 +48,22 @@ export default function Home() {
   const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user)
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (data.user) {
+        const res = await fetch('/api/check-subscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: data.user.email }),
+        })
+        const { hasSubscription } = await res.json()
+        if (!hasSubscription) {
+          router.push('/landing')
+          return
+        }
+        setUser(data.user)
+      } else {
+        router.push('/auth')
+      }
       setAuthChecked(true)
     })
     supabase.auth.onAuthStateChange((_, session) => {
