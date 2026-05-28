@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import emailjs from '@emailjs/browser'
+import { supabase } from '@/lib/supabase'
 
 export default function Contact() {
   const router = useRouter()
@@ -11,6 +12,13 @@ export default function Contact() {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setIsLoggedIn(!!data.user)
+    })
+  }, [])
 
   const s = {
     bg: '#f7f3ee', card: '#fffdf8', border: '#e8ddd0',
@@ -41,7 +49,7 @@ export default function Contact() {
 
   return (
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', fontFamily: 'Georgia, serif' }}>
-      <img src="/seal.svg" height="80" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem', cursor: 'pointer' }} onClick={() => router.push('/landing')} />
+      <img src="/seal.svg" height="80" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem', cursor: 'pointer' }} onClick={() => router.push(isLoggedIn ? '/app' : '/landing')} />
 
       <div style={{ width: '100%', maxWidth: 480, background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2rem' }}>
 
@@ -50,12 +58,12 @@ export default function Contact() {
             <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
             <h2 style={{ fontSize: 22, fontWeight: 700, color: s.text, marginBottom: 12 }}>Message sent!</h2>
             <p style={{ fontSize: 15, color: s.muted, marginBottom: '1.5rem' }}>Thanks for getting in touch. We'll get back to you as soon as possible.</p>
-            <button onClick={() => router.push('/landing')} style={{ padding: '10px 24px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Back to home</button>
+            <button onClick={() => router.push(isLoggedIn ? '/app' : '/landing')} style={{ padding: '10px 24px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>{isLoggedIn ? '← Back to app' : '← Back to home'}</button>
           </div>
         ) : (
           <>
             <h2 style={{ fontSize: 22, fontWeight: 700, color: s.text, marginBottom: 4 }}>Contact us</h2>
-            <p style={{ fontSize: 14, color: s.muted, marginBottom: '1.5rem' }}>Questions, feedback or issues — we'd love to hear from you.</p>
+            <p style={{ fontSize: 14, color: s.muted, marginBottom: '1.5rem' }}>Questions, feedback or issues - we'd love to hear from you.</p>
 
             <div style={{ marginBottom: '1rem' }}>
               <label style={{ fontSize: 11, letterSpacing: 2, color: s.lightbrown, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Name</label>
@@ -100,8 +108,8 @@ export default function Contact() {
               {loading ? 'Sending...' : 'Send message →'}
             </button>
 
-            <button onClick={() => router.push('/landing')} style={{ width: '100%', padding: '10px', borderRadius: 8, background: 'transparent', border: `1px solid ${s.border}`, color: s.muted, fontSize: 14, fontFamily: 'Georgia, serif', cursor: 'pointer' }}>
-              ← Back to home
+            <button onClick={() => router.push(isLoggedIn ? '/app' : '/landing')} style={{ width: '100%', padding: '10px', borderRadius: 8, background: 'transparent', border: `1px solid ${s.border}`, color: s.muted, fontSize: 14, fontFamily: 'Georgia, serif', cursor: 'pointer' }}>
+              {isLoggedIn ? '← Back to app' : '← Back to home'}
             </button>
           </>
         )}

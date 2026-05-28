@@ -436,7 +436,10 @@ export default function Home() {
 
         {user && (
           <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
-            <div style={{ fontSize: 11, color: s.lightbrown, marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</div>
+            <button onClick={() => { setMenuOpen(false); router.push('/contact') }} style={{ ...menuBtn, borderColor: s.border, background: 'transparent', color: s.brown }}>
+              Contact us
+            </button>
+            <div style={{ fontSize: 11, color: s.lightbrown, margin: '1.5rem 0 8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</div>
             <button onClick={async () => { await supabase.auth.signOut(); router.push('/landing') }} style={{ ...menuBtn, borderColor: s.border, background: 'transparent', color: s.red }}>
               Sign out
             </button>
