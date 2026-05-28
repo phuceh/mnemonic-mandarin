@@ -55,7 +55,7 @@ export default function Landing() {
         </div>
       </nav>
 
-      <section style={{ maxWidth: 720, margin: '0 auto', padding: '2rem 2rem 4rem', textAlign: 'center' }}>
+      <section style={{ maxWidth: 800, margin: '0 auto', padding: '2rem 2rem 4rem', textAlign: 'center' }}>
         <img src="/logo.svg" height="180" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem' }} />
         <h1 style={{ fontSize: 52, fontWeight: 700, color: s.text, lineHeight: 1.1, letterSpacing: '-1.5px', marginBottom: '1.25rem', fontFamily: '"Playfair Display", Georgia, serif' }}>
           Remember Mandarin<br />
