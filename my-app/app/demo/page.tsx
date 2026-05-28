@@ -14,10 +14,17 @@ type Word = {
 export default function Demo() {
   const router = useRouter()
 
+  useEffect(() => {
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) window.location.reload()
+    })
+  }, [])
+
   async function handleSubscribe() {
     const res = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
       body: JSON.stringify({ email: '' }),
     })
     const data = await res.json()
@@ -86,7 +93,7 @@ export default function Demo() {
         <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
         <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12 }}>You've learned 20 words!</h2>
         <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
-          Create a free account to unlock the full word list, track your progress, and never forget a word again!
+          Get full access to all 300 HSK1 words, track your progress, and never forget a word again.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
           <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>

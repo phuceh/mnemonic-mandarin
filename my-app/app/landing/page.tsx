@@ -1,13 +1,21 @@
 'use client'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function Landing() {
   const router = useRouter()
 
+  useEffect(() => {
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) window.location.reload()
+    })
+  }, [])
+
   async function handleSubscribe() {
     const res = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
       body: JSON.stringify({ email: '' }),
     })
     const data = await res.json()
