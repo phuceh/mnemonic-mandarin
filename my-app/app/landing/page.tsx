@@ -149,7 +149,8 @@ export default function Landing() {
 
       <footer style={{ background: s.card, borderTop: '1px solid #e8ddd0', padding: '2rem', textAlign: 'center' }}>
         <img src="/seal.svg" height="60" alt="Memorize Mandarin" style={{ marginBottom: 8 }} />
-        <div style={{ fontSize: 12, color: s.lightbrown }}>Mandarin vocabulary with mnemonics · HSK1 available now</div>
+        <div style={{ fontSize: 12, color: s.lightbrown, marginBottom: 8 }}>Mandarin vocabulary with mnemonics · HSK1 available now</div>
+        <button onClick={() => router.push('/contact')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 12, fontFamily: 'Georgia, serif', textDecoration: 'underline' }}>Contact us</button>
       </footer>
     </div>
   )
