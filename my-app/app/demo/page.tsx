@@ -152,7 +152,7 @@ export default function Demo() {
               <div style={{ borderTop: `1px solid ${s.border}`, paddingTop: '1.25rem' }}>
                 <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
                 <div style={{ fontSize: 15, lineHeight: 1.8, color: '#3d2010', marginBottom: '1.25rem' }}>{word.mnemonic}</div>
-                <img src={imageUrl} alt={word.english} style={{ width: '100%', borderRadius: 8, objectFit: 'contain', maxHeight: 200, mixBlendMode: 'multiply' }} />
+                <img src={imageUrl} alt={word.english} style={{ width: '100%', borderRadius: 8, objectFit: 'contain', maxHeight: 200 }} />
                 <div style={{ textAlign: 'center', fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '1.5rem' }}>tap to return</div>
               </div>
             </div>
