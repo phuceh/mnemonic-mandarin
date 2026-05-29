@@ -56,7 +56,7 @@ export default function Demo() {
   }, [])
 
   if (loading) return (
-    <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Georgia, serif', color: s.lightbrown }}>
+    <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.lightbrown }}>
       Loading...
     </div>
   )
@@ -87,32 +87,32 @@ export default function Demo() {
   }
 
   if (finished) return (
-    <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', fontFamily: 'Georgia, serif' }}>
+    <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
       <img src="/seal.svg" height="80" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem' }} />
       <div style={{ textAlign: 'center', maxWidth: 480 }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
-        <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12 }}>You've learned 20 words!</h2>
+        <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12, fontFamily: '"Playfair Display", Georgia, serif' }}>You've learned 20 words!</h2>
         <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
           Get full access to all 300 HSK1 words, track your progress, and never forget a word again.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
-          <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
+          <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
             Get HSK1 full access: £1/month
           </button>
-          <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false) }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>
+          <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false) }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
             Learn again
           </button>
         </div>
-        <button onClick={() => router.push('/landing')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 14, fontFamily: 'Georgia, serif' }}>← Back to home</button>
+        <button onClick={() => router.push('/landing')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 14 }}>← Back to home</button>
       </div>
     </div>
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: s.bg, fontFamily: 'Georgia, serif' }}>
+    <div style={{ minHeight: '100vh', background: s.bg }}>
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: `1px solid ${s.border}`, background: s.card }}>
         <img src="/seal.svg" height="40" alt="Memorize Mandarin" />
-        <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Get HSK1 full access: £1/month</button>
+        <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontWeight: 700 }}>Get HSK1 full access: £1/month</button>
       </nav>
 
       <div style={{ maxWidth: 580, margin: '0 auto', padding: '2rem 1.5rem' }}>
@@ -124,28 +124,30 @@ export default function Demo() {
           <div style={{ fontSize: 13, color: s.muted }}>{words.length - current - 1} left</div>
         </div>
 
-        <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 320 }}>
+        <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 380 }}>
           <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
 
             {/* Front */}
-            <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 320, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+            <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase', marginBottom: '1.5rem' }}>HSK 1</div>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 72, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 12, fontFamily: 'serif' }}>{word.chinese}</div>
                 <div style={{ fontSize: 22, color: s.muted, marginBottom: 6, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{word.pinyin}</div>
                 <div style={{ fontSize: 16, color: s.lightbrown, letterSpacing: 1, marginBottom: 16, textTransform: 'uppercase' }}>{word.english}</div>
-                <button onClick={playAudio} style={{ padding: '7px 20px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted }}>🔊 Listen</button>
               </div>
-              <div style={{ textAlign: 'center', fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '2rem' }}>tap to reveal mnemonic</div>
+              <div style={{ textAlign: 'center', marginTop: 'auto', paddingTop: '1rem' }}>
+                <button onClick={playAudio} style={{ padding: '7px 20px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted }}>🔊 Listen</button>
+                <div style={{ fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '1rem' }}>tap to reveal mnemonic</div>
+              </div>
             </div>
 
             {/* Back */}
-            <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 320, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
+            <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
               <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase', marginBottom: '1.5rem' }}>HSK 1</div>
               <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                 <div style={{ fontSize: 48, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 8, fontFamily: 'serif' }}>{word.chinese}</div>
                 <div style={{ fontSize: 18, color: s.muted, marginBottom: 4, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{word.pinyin}</div>
-                <div style={{ fontSize: 14, color: s.lightbrown, letterSpacing: 1, textTransform: 'uppercase' }}>{word.english}</div>
+                <div style={{ fontSize: 16, color: s.lightbrown, letterSpacing: 1, textTransform: 'uppercase' }}>{word.english}</div>
               </div>
               <div style={{ borderTop: `1px solid ${s.border}`, paddingTop: '1.25rem' }}>
                 <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
@@ -167,7 +169,7 @@ export default function Demo() {
 
         <div style={{ textAlign: 'center', padding: '1rem', background: '#fdf0ee', borderRadius: 8, border: `1px solid #e8c0b8` }}>
           <span style={{ fontSize: 13, color: s.red }}>✨ Enjoying this? </span>
-          <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontWeight: 700, fontFamily: 'Georgia, serif', textDecoration: 'underline' }}>Get full access for £1/month</button>
+          <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontWeight: 700, textDecoration: 'underline' }}>Get full access for £1/month</button>
           <span style={{ fontSize: 13, color: s.red }}>: HSK1 full word list.</span>
         </div>
       </div>
