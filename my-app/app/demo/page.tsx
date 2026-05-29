@@ -142,7 +142,7 @@ export default function Demo() {
             </div>
 
             {/* Back */}
-            <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
+            <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 8px 32px rgba(192,57,43,0.08)', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase', marginBottom: '1.5rem' }}>HSK 1</div>
               <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                 <div style={{ fontSize: 48, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 8, fontFamily: 'serif' }}>{word.chinese}</div>
