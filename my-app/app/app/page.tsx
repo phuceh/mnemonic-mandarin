@@ -473,7 +473,7 @@ export default function Home() {
               const data = await res.json()
               if (data.url) window.location.href = data.url
             }} style={{ ...menuBtn, borderColor: s.border, background: 'transparent', color: s.brown }}>
-              Manage subscription
+              My Subscription
             </button>
             <div style={{ fontSize: 11, color: s.lightbrown, margin: '1.5rem 0 8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</div>
             <button onClick={async () => { await supabase.auth.signOut(); router.push('/landing') }} style={{ ...menuBtn, borderColor: s.border, background: 'transparent', color: s.red }}>
