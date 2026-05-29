@@ -161,7 +161,7 @@ export default function Demo() {
         </div>
 
         <div style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
-          <button onClick={prev} disabled={current === 0} style={{ width: 64, flexShrink: 0, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: current === 0 ? 'default' : 'pointer', fontSize: 20, color: current === 0 ? s.border : s.brown, opacity: current === 0 ? 0.4 : 1 }}>←</button>
+          <button onClick={prev} disabled={current === 0} style={{ width: 64, flexShrink: 0, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: current === 0 ? 'default' : 'pointer', fontSize: 20, color: current === 0 ? s.border : s.brown }}>←</button>
           <button onClick={next} style={{ flex: 2, height: 48, borderRadius: 8, border: 'none', background: s.red, cursor: 'pointer', fontSize: 14, color: '#fff', fontWeight: 700 }}>
             {current + 1 >= words.length ? 'Finish →' : 'Next →'}
           </button>
