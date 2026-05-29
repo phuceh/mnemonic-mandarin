@@ -124,7 +124,7 @@ export default function Demo() {
           <div style={{ fontSize: 13, color: s.muted }}>{words.length - current - 1} left</div>
         </div>
 
-        <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 380, position: 'relative' }}>
+        <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 380 }}>
           <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
 
             {/* Front */}
@@ -152,7 +152,7 @@ export default function Demo() {
               <div style={{ borderTop: `1px solid ${s.border}`, paddingTop: '1.25rem' }}>
                 <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 10, textTransform: 'uppercase' }}>Mnemonic</div>
                 <div style={{ fontSize: 15, lineHeight: 1.8, color: '#3d2010', marginBottom: '1.25rem' }}>{word.mnemonic}</div>
-                <img src={imageUrl} alt={word.english} style={{ width: '100%', borderRadius: 8, objectFit: 'contain', maxHeight: 200 }} />
+                <img src={imageUrl} alt={word.english} style={{ width: '100%', borderRadius: 8, objectFit: 'contain', maxHeight: 200, mixBlendMode: 'multiply' }} />
                 <div style={{ textAlign: 'center', fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '1.5rem' }}>tap to return</div>
               </div>
             </div>
@@ -160,8 +160,8 @@ export default function Demo() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 8, marginBottom: '1rem', position: 'relative', zIndex: 10 }}>
-          <button onClick={prev} disabled={current === 0} style={{ width: 64, flexShrink: 0, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: '#ffffff', cursor: current === 0 ? 'default' : 'pointer', fontSize: 20, color: current === 0 ? s.border : s.brown, opacity: current === 0 ? 0.4 : 1 }}>←</button>
+        <div style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
+          <button onClick={prev} disabled={current === 0} style={{ width: 64, flexShrink: 0, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: current === 0 ? 'default' : 'pointer', fontSize: 20, color: current === 0 ? s.border : s.brown, opacity: current === 0 ? 0.4 : 1 }}>←</button>
           <button onClick={next} style={{ flex: 2, height: 48, borderRadius: 8, border: 'none', background: s.red, cursor: 'pointer', fontSize: 14, color: '#fff', fontWeight: 700 }}>
             {current + 1 >= words.length ? 'Finish →' : 'Next →'}
           </button>
