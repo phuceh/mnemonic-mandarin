@@ -124,7 +124,7 @@ export default function Demo() {
           <div style={{ fontSize: 13, color: s.muted }}>{words.length - current - 1} left</div>
         </div>
 
-        <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 380 }}>
+        <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 380, position: 'relative' }}>
           <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
 
             {/* Front */}
