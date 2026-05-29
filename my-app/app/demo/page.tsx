@@ -111,7 +111,7 @@ export default function Demo() {
   return (
     <div style={{ minHeight: '100vh', background: s.bg }}>
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: `1px solid ${s.border}`, background: s.card }}>
-        <img src="/seal.svg" height="40" alt="Memorize Mandarin" />
+        <img src="/seal.svg" height="40" alt="Memorize Mandarin" style={{ cursor: 'pointer' }} onClick={() => router.push('/landing')} />
         <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontWeight: 700 }}>Get HSK1 full access: £1/month</button>
       </nav>
 
@@ -161,7 +161,7 @@ export default function Demo() {
         </div>
 
         <div style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
-          <button onClick={prev} disabled={current === 0} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: current === 0 ? 'default' : 'pointer', fontSize: 20, color: current === 0 ? s.border : s.brown, opacity: current === 0 ? 0.4 : 1 }}>←</button>
+          <button onClick={prev} disabled={current === 0} style={{ width: 64, flexShrink: 0, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: current === 0 ? 'default' : 'pointer', fontSize: 20, color: current === 0 ? s.border : s.brown, opacity: current === 0 ? 0.4 : 1 }}>←</button>
           <button onClick={next} style={{ flex: 2, height: 48, borderRadius: 8, border: 'none', background: s.red, cursor: 'pointer', fontSize: 14, color: '#fff', fontWeight: 700 }}>
             {current + 1 >= words.length ? 'Finish →' : 'Next →'}
           </button>
