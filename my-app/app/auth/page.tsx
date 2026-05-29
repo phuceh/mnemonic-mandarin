@@ -19,6 +19,17 @@ function AuthForm() {
     text: '#2d1810', muted: '#8b5a3a'
   }
 
+  async function handleForgotPassword() {
+    if (!email) { setMessage('Please enter your email address first.'); return }
+    setLoading(true)
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    if (error) setMessage(error.message)
+    else setMessage('Check your email for a password reset link!')
+    setLoading(false)
+  }
+
   async function handleSubmit() {
     setLoading(true)
     setMessage('')
@@ -96,6 +107,16 @@ function AuthForm() {
         }}>
           {loading ? 'Loading...' : isLogin ? 'Sign in →' : 'Create account →'}
         </button>
+        
+        {isLogin && (
+          <button onClick={handleForgotPassword} disabled={loading} style={{
+            width: '100%', padding: '10px', borderRadius: 8,
+            background: 'transparent', border: `1px solid ${s.border}`,
+            color: s.muted, fontSize: 14, cursor: 'pointer', marginBottom: '1rem'
+          }}>
+            Forgot password?
+          </button>
+        )}
 
       </div>
 

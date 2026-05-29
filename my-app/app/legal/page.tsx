@@ -58,10 +58,10 @@ export default function Legal() {
           <h2 style={{ fontSize: 18, fontWeight: 700, color: s.text, marginBottom: 8, marginTop: '1.5rem' }}>2. What data we collect</h2>
           <p style={{ fontSize: 15, color: s.muted, lineHeight: 1.8, marginBottom: '1rem' }}>We collect the following data when you use Memorize Mandarin:</p>
           <ul style={{ fontSize: 15, color: s.muted, lineHeight: 1.8, marginBottom: '1rem', paddingLeft: '1.5rem' }}>
-            <li style={{ marginBottom: 8 }}><strong>Email address</strong> — used to create your account and manage your subscription</li>
-            <li style={{ marginBottom: 8 }}><strong>Payment information</strong> — processed securely by Stripe. We do not store card details.</li>
-            <li style={{ marginBottom: 8 }}><strong>Learning progress</strong> — which words you have marked as learned</li>
-            <li style={{ marginBottom: 8 }}><strong>Usage data</strong> — basic analytics about how you use the app</li>
+            <li style={{ marginBottom: 8 }}><strong>Email address</strong> - used to create your account and manage your subscription</li>
+            <li style={{ marginBottom: 8 }}><strong>Payment information</strong> - processed securely by Stripe. We do not store card details.</li>
+            <li style={{ marginBottom: 8 }}><strong>Learning progress</strong> - which words you have marked as learned</li>
+            <li style={{ marginBottom: 8 }}><strong>Usage data</strong> - basic analytics about how you use the app</li>
           </ul>
 
           <h2 style={{ fontSize: 18, fontWeight: 700, color: s.text, marginBottom: 8, marginTop: '1.5rem' }}>3. How we use your data</h2>
@@ -70,9 +70,9 @@ export default function Legal() {
           <h2 style={{ fontSize: 18, fontWeight: 700, color: s.text, marginBottom: 8, marginTop: '1.5rem' }}>4. Third parties</h2>
           <p style={{ fontSize: 15, color: s.muted, lineHeight: 1.8, marginBottom: '1rem' }}>We use the following third party services:</p>
           <ul style={{ fontSize: 15, color: s.muted, lineHeight: 1.8, marginBottom: '1rem', paddingLeft: '1.5rem' }}>
-            <li style={{ marginBottom: 8 }}><strong>Supabase</strong> — database and authentication (EU hosted)</li>
-            <li style={{ marginBottom: 8 }}><strong>Stripe</strong> — payment processing</li>
-            <li style={{ marginBottom: 8 }}><strong>Vercel</strong> — hosting</li>
+            <li style={{ marginBottom: 8 }}><strong>Supabase</strong> - database and authentication (EU hosted)</li>
+            <li style={{ marginBottom: 8 }}><strong>Stripe</strong> - payment processing</li>
+            <li style={{ marginBottom: 8 }}><strong>Vercel</strong> - hosting</li>
           </ul>
 
           <h2 style={{ fontSize: 18, fontWeight: 700, color: s.text, marginBottom: 8, marginTop: '1.5rem' }}>5. Your rights</h2>
