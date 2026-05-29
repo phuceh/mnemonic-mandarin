@@ -275,11 +275,14 @@ export default function Home() {
       <div style={{ width: '100%', maxWidth: 400 }}>
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Select level</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
-          {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => (
-            <button key={level} onClick={() => setQuizLevel(level)} style={{ padding: '10px 6px', borderRadius: 8, border: '1px solid', borderColor: quizLevel === level ? s.red : s.border, background: quizLevel === level ? s.red : s.card, color: quizLevel === level ? '#fff' : s.brown, cursor: 'pointer', fontSize: 13, fontFamily: 'Georgia, serif' }}>
-              {level === 'all' ? 'All' : `HSK ${level}`}
-            </button>
-          ))}
+          {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => {
+            const disabled = level !== 'all' && level !== 1
+            return (
+              <button key={level} onClick={() => { if (!disabled) setQuizLevel(level) }} style={{ padding: '10px 6px', borderRadius: 8, border: '1px solid', borderColor: quizLevel === level ? s.red : s.border, background: quizLevel === level ? s.red : s.card, color: quizLevel === level ? '#fff' : disabled ? '#ccc' : s.brown, cursor: disabled ? 'default' : 'pointer', fontSize: 13, fontFamily: 'Georgia, serif', opacity: disabled ? 0.5 : 1 }}>
+                {level === 'all' ? 'All' : `HSK ${level}`}
+              </button>
+            )
+          })}
         </div>
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Number of questions</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
