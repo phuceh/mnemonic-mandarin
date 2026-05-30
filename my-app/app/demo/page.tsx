@@ -20,15 +20,8 @@ export default function Demo() {
     })
   }, [])
 
-  async function handleSubscribe() {
-    const res = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      cache: 'no-store',
-      body: JSON.stringify({ email: '' }),
-    })
-    const data = await res.json()
-    if (data.url) window.location.href = data.url
+  function handleSubscribe() {
+    router.push('/pricing')
   }
 
   const [words, setWords] = useState<Word[]>([])
@@ -93,11 +86,11 @@ export default function Demo() {
         <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
         <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12, fontFamily: '"Playfair Display", Georgia, serif' }}>You've learned 20 words!</h2>
         <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
-          Get full access to all 300 HSK1 words, track your progress, and never forget a word again.
+          Get full access, track your progress, and never forget a word again.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
           <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
-            Get HSK1 full access: £1/month
+            Get full access
           </button>
           <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false) }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
             Learn again
@@ -112,7 +105,7 @@ export default function Demo() {
     <div style={{ minHeight: '100vh', background: s.bg }}>
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: `1px solid ${s.border}`, background: s.card }}>
         <img src="/seal.svg" height="40" alt="Memorize Mandarin" style={{ cursor: 'pointer' }} onClick={() => router.push('/landing')} />
-        <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontWeight: 700 }}>Get HSK1 full access: £1/month</button>
+        <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontWeight: 700 }}>Get full access</button>
       </nav>
 
       <div style={{ maxWidth: 580, margin: '0 auto', padding: '2rem 1.5rem' }}>
