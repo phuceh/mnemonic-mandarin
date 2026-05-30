@@ -62,7 +62,7 @@ export default function Landing() {
           Most vocabulary apps rely on repetition. Memorize Mandarin uses mnemonic stories - vivid, absurd scenes that make words unforgettable from the first read.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try for free</button>
+          <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.brown, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try for free</button>
           <button onClick={() => router.push('/pricing')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Get full access</button>
         </div>
         <div style={{ fontSize: 14, color: s.muted, marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel subscription anytime · Lifetime access available</div>
