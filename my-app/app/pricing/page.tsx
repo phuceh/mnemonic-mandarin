@@ -105,7 +105,7 @@ export default function Pricing() {
 
         <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
           <div style={{ display: 'inline-block', background: '#fdf0ee', border: `1px solid #e8c0b8`, borderRadius: 10, padding: '1rem 2rem', fontSize: 14, color: s.red }}>
-            ✨ Not sure yet? <button onClick={() => router.push('/demo')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontWeight: 700, textDecoration: 'underline', fontSize: 14 }}>Try 20 words for free</button> — no account needed.
+            ✨ Not sure yet? <button onClick={() => router.push('/demo')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontWeight: 700, textDecoration: 'underline', fontSize: 14 }}>Try 20 words for free</button> - no account needed.
           </div>
         </div>
 

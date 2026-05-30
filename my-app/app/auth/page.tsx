@@ -122,7 +122,7 @@ function AuthForm() {
 
       {isLogin && (
         <div style={{ marginTop: 16, fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif', textAlign: 'center' }}>
-          New here? <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontFamily: 'Georgia, serif', textDecoration: 'underline' }}>Get HSK1 full access for £1/month</button>
+          New here? <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontFamily: 'Georgia, serif', textDecoration: 'underline' }}>Get full access</button>
         </div>
       )}
     </div>
