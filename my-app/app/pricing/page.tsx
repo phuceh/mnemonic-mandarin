@@ -70,7 +70,7 @@ export default function Pricing() {
           <div style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2rem' }}>
             <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase', marginBottom: '1rem' }}>Monthly</div>
             <div style={{ fontSize: 42, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: 4 }}>£1</div>
-            <div style={{ fontSize: 14, color: s.muted, marginBottom: '2rem' }}>per month · cancel anytime</div>
+            <div style={{ fontSize: 14, color: s.muted, marginBottom: '2rem' }}>per month · cancel anytime · all future levels included</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: '2rem' }}>
               {features.map((f, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: s.brown }}>
@@ -111,7 +111,7 @@ export default function Pricing() {
 
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ fontSize: 10, letterSpacing: 3, color: s.red, textTransform: 'uppercase', marginBottom: '1rem' }}>Content roadmap</div>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included — and what's coming</h2>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included - and what's coming</h2>
           <p style={{ fontSize: 14, color: s.muted, marginBottom: '2.5rem' }}>Both plans include every level as it's released.</p>
         </div>
 
