@@ -63,9 +63,9 @@ export default function Landing() {
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try for free</button>
-          <button onClick={() => router.push('/pricing')} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Get full access</button>
+          <button onClick={() => router.push('/pricing')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Get full access</button>
         </div>
-        <div style={{ fontSize: 14, color: s.muted, marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
+        <div style={{ fontSize: 14, color: s.muted, marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel subscription anytime · Lifetime access available</div>
       </section>
 
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 2rem 5rem' }}>
@@ -141,7 +141,7 @@ export default function Landing() {
             Get full access
           </button>
         </div>
-        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
+        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel subscription anytime · Lifetime access available</div>
       </section>
 
       <footer style={{ background: s.card, borderTop: '1px solid #e8ddd0', padding: '2rem', textAlign: 'center' }}>
