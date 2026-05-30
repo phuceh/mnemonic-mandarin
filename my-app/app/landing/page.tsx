@@ -19,17 +19,6 @@ export default function Landing() {
     })
   }, [])
 
-  async function handleSubscribe() {
-    const res = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      cache: 'no-store',
-      body: JSON.stringify({ email: '' }),
-    })
-    const data = await res.json()
-    if (data.url) window.location.href = data.url
-  }
-
   const s = {
     bg: '#f7f3ee', card: '#fffdf8', border: '#e8ddd0',
     red: '#c0392b', brown: '#5a3a2a', lightbrown: '#b08060',
@@ -59,7 +48,7 @@ export default function Landing() {
         <div style={{ display: 'flex', gap: 10 }}>
           {!isMobile && <button onClick={() => router.push('/auth')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Sign in</button>}
           {!isMobile && <button onClick={() => router.push('/demo')} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #e8ddd0', background: 'transparent', color: s.brown, fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Try free</button>}
-          <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>{isMobile ? 'Get HSK1: £1/month' : 'Get HSK1 full access: £1/month'}</button>
+          <button onClick={() => router.push('/pricing')} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Get full access</button>
         </div>
       </nav>
 
@@ -74,7 +63,7 @@ export default function Landing() {
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Try for free</button>
-          <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Get HSK1 full access: £1/month</button>
+          <button onClick={() => router.push('/pricing')} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Get full access</button>
         </div>
         <div style={{ fontSize: 14, color: s.muted, marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
       </section>
@@ -148,8 +137,8 @@ export default function Landing() {
           <button onClick={() => router.push('/demo')} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: 'transparent', color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>
             Try for free
           </button>
-          <button onClick={handleSubscribe} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: '#fff', color: s.red, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
-            Get HSK1 full access: £1/month
+          <button onClick={() => router.push('/pricing')} style={{ padding: '14px 36px', borderRadius: 10, border: '2px solid rgba(255,255,255,0.4)', background: '#fff', color: s.red, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
+            Get full access
           </button>
         </div>
         <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel anytime</div>
