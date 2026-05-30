@@ -81,6 +81,10 @@ export default function Pricing() {
                 </div>
               ))}
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: s.brown }}>
+                <span style={{ color: s.green, fontWeight: 700 }}>✓</span> All future HSK levels as they're added
+              </div>
+            </div>
             <button onClick={handleMonthly} style={{ width: '100%', padding: '14px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 15, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
               Get monthly access →
             </button>
