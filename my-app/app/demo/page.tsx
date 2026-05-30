@@ -169,8 +169,8 @@ export default function Demo() {
 
         <div style={{ textAlign: 'center', padding: '1rem', background: '#fdf0ee', borderRadius: 8, border: `1px solid #e8c0b8` }}>
           <span style={{ fontSize: 13, color: s.red }}>✨ Enjoying this? </span>
-          <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontWeight: 700, textDecoration: 'underline' }}>Get full access for £1/month</button>
-          <span style={{ fontSize: 13, color: s.red }}>: HSK1 full word list.</span>
+          <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontWeight: 700, textDecoration: 'underline' }}>Get full access</button>
+          
         </div>
       </div>
     </div>
