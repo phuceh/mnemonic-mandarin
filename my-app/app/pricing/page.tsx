@@ -38,11 +38,11 @@ export default function Pricing() {
 
   const roadmap = [
     { level: 'HSK 1', words: '300 words', status: 'available' },
-    { level: 'HSK 2', words: '~300 words', status: 'soon' },
-    { level: 'HSK 3', words: '~600 words', status: 'soon' },
-    { level: 'HSK 4', words: '~1,000 words', status: 'planned' },
-    { level: 'HSK 5', words: '~1,500 words', status: 'planned' },
-    { level: 'HSK 6', words: '~2,500 words', status: 'planned' },
+    { level: 'HSK 2', words: '200 words (500 total)', status: 'soon' },
+    { level: 'HSK 3', words: '500 words (1,000 total)', status: 'soon' },
+    { level: 'HSK 4', words: '1,000 words (2,000 total)', status: 'planned' },
+    { level: 'HSK 5', words: '1,600 words (3,600 total)', status: 'planned' },
+    { level: 'HSK 6', words: '1,800 words (5,400 total)', status: 'planned' },
   ]
 
   return (
@@ -112,14 +112,14 @@ export default function Pricing() {
         {/* Free trial note */}
         <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
           <div style={{ display: 'inline-block', background: '#fdf0ee', border: `1px solid #e8c0b8`, borderRadius: 10, padding: '1rem 2rem', fontSize: 14, color: s.red }}>
-            ✨ Not sure yet? <button onClick={() => router.push('/demo')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontWeight: 700, textDecoration: 'underline', fontSize: 14 }}>Try 20 words for free</button> — no account needed.
+            ✨ Not sure yet? <button onClick={() => router.push('/demo')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontWeight: 700, textDecoration: 'underline', fontSize: 14 }}>Try 20 words for free</button> - no account needed.
           </div>
         </div>
 
         {/* Roadmap */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ fontSize: 10, letterSpacing: 3, color: s.red, textTransform: 'uppercase', marginBottom: '1rem' }}>Content roadmap</div>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included — and what's coming</h2>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included - and what's coming</h2>
           <p style={{ fontSize: 14, color: s.muted, marginBottom: '2.5rem' }}>Lifetime access includes every level as it's released.</p>
         </div>
 
