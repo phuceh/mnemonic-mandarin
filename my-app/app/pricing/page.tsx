@@ -22,7 +22,6 @@ export default function Pricing() {
   }
 
   async function handleLifetime() {
-    // placeholder for now
     alert('Lifetime access coming soon!')
   }
 
@@ -34,6 +33,7 @@ export default function Pricing() {
     'Flip card learning mode',
     'Multiple choice quiz mode',
     'Progress tracking',
+    'All future HSK levels as they\'re added',
   ]
 
   const roadmap = [
@@ -48,7 +48,6 @@ export default function Pricing() {
   return (
     <div style={{ background: s.bg, minHeight: '100vh' }}>
 
-      {/* Nav */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: `1px solid ${s.border}`, background: s.card, position: 'sticky', top: 0, zIndex: 100 }}>
         <img src="/seal.svg" height="50" alt="Memorize Mandarin" style={{ cursor: 'pointer' }} onClick={() => router.push('/landing')} />
         <div style={{ display: 'flex', gap: 10 }}>
@@ -59,14 +58,12 @@ export default function Pricing() {
 
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '4rem 2rem' }}>
 
-        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <div style={{ fontSize: 10, letterSpacing: 3, color: s.red, textTransform: 'uppercase', marginBottom: '1rem' }}>Pricing</div>
           <h1 style={{ fontSize: 36, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '1rem' }}>Simple, honest pricing</h1>
           <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7 }}>Start with a free trial. Upgrade when you're ready.</p>
         </div>
 
-        {/* Pricing cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: '5rem' }}>
 
           {/* Monthly */}
@@ -80,10 +77,6 @@ export default function Pricing() {
                   <span style={{ color: s.green, fontWeight: 700 }}>✓</span> {f}
                 </div>
               ))}
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: s.brown }}>
-                <span style={{ color: s.green, fontWeight: 700 }}>✓</span> All future HSK levels as they're added
-              </div>
             </div>
             <button onClick={handleMonthly} style={{ width: '100%', padding: '14px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 15, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
               Get monthly access →
@@ -102,9 +95,6 @@ export default function Pricing() {
                   <span style={{ color: s.green, fontWeight: 700 }}>✓</span> {f}
                 </div>
               ))}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: s.brown }}>
-                <span style={{ color: s.green, fontWeight: 700 }}>✓</span> All future HSK levels as they're added
-              </div>
             </div>
             <button onClick={handleLifetime} style={{ width: '100%', padding: '14px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 15, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
               Get lifetime access →
@@ -113,18 +103,16 @@ export default function Pricing() {
 
         </div>
 
-        {/* Free trial note */}
         <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
           <div style={{ display: 'inline-block', background: '#fdf0ee', border: `1px solid #e8c0b8`, borderRadius: 10, padding: '1rem 2rem', fontSize: 14, color: s.red }}>
-            ✨ Not sure yet? <button onClick={() => router.push('/demo')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontWeight: 700, textDecoration: 'underline', fontSize: 14 }}>Try 20 words for free</button> - no account needed.
+            ✨ Not sure yet? <button onClick={() => router.push('/demo')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontWeight: 700, textDecoration: 'underline', fontSize: 14 }}>Try 20 words for free</button> — no account needed.
           </div>
         </div>
 
-        {/* Roadmap */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ fontSize: 10, letterSpacing: 3, color: s.red, textTransform: 'uppercase', marginBottom: '1rem' }}>Content roadmap</div>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included - and what's coming</h2>
-          <p style={{ fontSize: 14, color: s.muted, marginBottom: '2.5rem' }}>Lifetime access includes every level as it's released.</p>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included — and what's coming</h2>
+          <p style={{ fontSize: 14, color: s.muted, marginBottom: '2.5rem' }}>Both plans include every level as it's released.</p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 560, margin: '0 auto' }}>
@@ -143,7 +131,6 @@ export default function Pricing() {
 
       </div>
 
-      {/* Footer */}
       <footer style={{ background: s.card, borderTop: `1px solid ${s.border}`, padding: '2rem', textAlign: 'center', marginTop: '4rem' }}>
         <img src="/seal.svg" height="60" alt="Memorize Mandarin" style={{ marginBottom: 8 }} />
         <div style={{ fontSize: 12, color: s.lightbrown, marginBottom: 8 }}>Mandarin vocabulary with mnemonics · HSK1 available now</div>
