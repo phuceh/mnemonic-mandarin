@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
       stripe_subscription_id: isLifetime ? `lifetime_${session.id}` : session.subscription as string,
       email: session.customer_details?.email || session.customer_email,
       status: 'active',
+      plan: isLifetime ? 'lifetime' : 'monthly',
     }, { onConflict: 'stripe_customer_id' })
   }
 
