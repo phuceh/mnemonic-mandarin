@@ -27,9 +27,10 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
+    const isLifetime = session.mode === 'payment'
     await supabase.from('subscriptions').upsert({
       stripe_customer_id: session.customer as string,
-      stripe_subscription_id: session.subscription as string,
+      stripe_subscription_id: isLifetime ? `lifetime_${session.id}` : session.subscription as string,
       email: session.customer_details?.email || session.customer_email,
       status: 'active',
     }, { onConflict: 'stripe_customer_id' })
@@ -37,8 +38,11 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'customer.subscription.deleted') {
     const subscription = event.data.object as Stripe.Subscription
-    await supabase.from('subscriptions').update({ status: 'cancelled' })
-      .eq('stripe_subscription_id', subscription.id)
+    const { data } = await supabase.from('subscriptions').select('stripe_subscription_id').eq('stripe_subscription_id', subscription.id).single()
+    if (data && !data.stripe_subscription_id.startsWith('lifetime_')) {
+      await supabase.from('subscriptions').update({ status: 'cancelled' })
+        .eq('stripe_subscription_id', subscription.id)
+    }
   }
 
   return NextResponse.json({ received: true })
