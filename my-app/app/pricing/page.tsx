@@ -22,7 +22,14 @@ export default function Pricing() {
   }
 
   async function handleLifetime() {
-    alert('Lifetime access coming soon!')
+    const res = await fetch('/api/create-lifetime-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify({ email: '' }),
+    })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
   }
 
   const features = [
