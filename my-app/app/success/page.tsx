@@ -42,7 +42,7 @@ function SuccessContent() {
           <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
           <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12 }}>Welcome to Memorize Mandarin!</h2>
           <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
-            Your subscription is confirmed. Redirecting you now...
+            Your payment is confirmed. Redirecting you now...
           </p>
         </div>
       )}
