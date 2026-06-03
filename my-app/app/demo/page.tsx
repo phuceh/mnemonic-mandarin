@@ -29,6 +29,11 @@ export default function Demo() {
   const [flipped, setFlipped] = useState(false)
   const [finished, setFinished] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [mode, setMode] = useState<'learn' | 'quiz' | 'results'>('learn')
+  const [quizIndex, setQuizIndex] = useState(0)
+  const [options, setOptions] = useState<string[]>([])
+  const [selected, setSelected] = useState<string | null>(null)
+  const [score, setScore] = useState(0)
 
   const s = {
     bg: '#f7f3ee', card: '#fffdf8', border: '#e8ddd0',
@@ -47,6 +52,43 @@ export default function Demo() {
         setLoading(false)
       })
   }, [])
+
+  function generateOptions(index: number, allWords: Word[]) {
+    const correct = allWords[index]
+    const wrong = allWords
+      .filter((_, i) => i !== index)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3)
+      .map(w => w.english)
+    setOptions([...wrong, correct.english].sort(() => Math.random() - 0.5))
+  }
+
+  function startQuiz() {
+    setQuizIndex(0)
+    setScore(0)
+    setSelected(null)
+    generateOptions(0, words)
+    setMode('quiz')
+  }
+
+  function handleAnswer(answer: string) {
+    if (selected) return
+    setSelected(answer)
+    if (answer === words[quizIndex].english) {
+      setScore(s => s + 1)
+    }
+  }
+
+  function nextQuestion() {
+    const next = quizIndex + 1
+    if (next >= words.length) {
+      setMode('results')
+      return
+    }
+    setQuizIndex(next)
+    setSelected(null)
+    generateOptions(next, words)
+  }
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.lightbrown }}>
@@ -79,9 +121,95 @@ export default function Demo() {
     new Audio(audioUrl).play()
   }
 
+  // RESULTS
+  if (mode === 'results') {
+    const pct = Math.round((score / words.length) * 100)
+    const msg = pct === 100 ? 'Perfect score!' : pct >= 80 ? 'Excellent work!' : pct >= 60 ? 'Good effort!' : 'Keep practising!'
+    const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '📚'
+    return (
+      <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+        <img src="/seal.svg" height="80" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem', cursor: 'pointer' }} onClick={() => router.push('/landing')} />
+        <div style={{ textAlign: 'center', maxWidth: 480, width: '100%' }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>{emoji}</div>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12, fontFamily: '"Playfair Display", Georgia, serif' }}>
+            You remembered {score} / {words.length} words!
+          </h2>
+          <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7, marginBottom: '1rem' }}>{pct}% · {msg}</p>
+          <div style={{ height: 8, background: s.border, borderRadius: 4, marginBottom: '2rem' }}>
+            <div style={{ height: '100%', background: pct >= 60 ? s.green : s.red, borderRadius: 4, width: `${pct}%`, transition: 'width 0.8s' }} />
+          </div>
+          <p style={{ fontSize: 15, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
+            Ready to learn all 300 HSK1 words with mnemonics, audio and progress tracking?
+          </p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
+            <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
+              Get full access
+            </button>
+            <button onClick={startQuiz} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.brown, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
+              Try again 🧠
+            </button>
+            <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false); setMode('learn') }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
+              Learn again
+            </button>
+          </div>
+          <button onClick={() => router.push('/landing')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 14 }}>← Back to home</button>
+        </div>
+      </div>
+    )
+  }
+
+  // QUIZ
+  if (mode === 'quiz') {
+    const quizWord = words[quizIndex]
+    return (
+      <div style={{ minHeight: '100vh', background: s.bg }}>
+        <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: `1px solid ${s.border}`, background: s.card }}>
+          <img src="/seal.svg" height="40" alt="Memorize Mandarin" style={{ cursor: 'pointer' }} onClick={() => router.push('/landing')} />
+          <button onClick={handleSubscribe} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontWeight: 700 }}>Get full access</button>
+        </nav>
+        <div style={{ maxWidth: 520, margin: '0 auto', padding: '2rem 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ fontSize: 13, color: s.muted }}>Question {quizIndex + 1} of {words.length}</div>
+            <div style={{ fontSize: 13, color: s.muted }}>Score: {score}</div>
+          </div>
+          <div style={{ height: 6, background: s.border, borderRadius: 3, marginBottom: '2rem' }}>
+            <div style={{ height: '100%', background: s.red, borderRadius: 3, width: `${((quizIndex + 1) / words.length) * 100}%`, transition: 'width 0.3s' }} />
+          </div>
+          <div style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+            <div style={{ fontSize: 11, color: s.lightbrown, letterSpacing: 2, marginBottom: 16, textTransform: 'uppercase' }}>What does this mean?</div>
+            <div style={{ fontSize: 64, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 10, fontFamily: 'serif' }}>{quizWord.chinese}</div>
+            <div style={{ fontSize: 20, color: s.muted, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{quizWord.pinyin}</div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: '1.5rem' }}>
+            {options.map(option => {
+              const isCorrect = option === quizWord.english
+              const isSelected = option === selected
+              let bg = s.card, border = s.border, color = s.brown
+              if (selected) {
+                if (isCorrect) { bg = '#f0faf5'; border = s.green; color = s.green }
+                else if (isSelected) { bg = '#fdf0ee'; border = s.red; color = s.red }
+              }
+              return (
+                <button key={option} onClick={() => handleAnswer(option)} style={{ padding: '14px 12px', borderRadius: 10, border: `1px solid ${border}`, background: bg, cursor: selected ? 'default' : 'pointer', fontSize: 14, color, fontFamily: 'Georgia, serif', textAlign: 'center' as const, transition: 'all 0.15s' }}>
+                  {isSelected ? (isCorrect ? '✓ ' : '✗ ') : ''}{option}
+                </button>
+              )
+            })}
+          </div>
+          {selected && (
+            <button onClick={nextQuestion} style={{ width: '100%', padding: '14px', borderRadius: 10, background: s.red, border: 'none', color: '#fff', fontSize: 16, fontFamily: 'Georgia, serif', cursor: 'pointer', fontWeight: 700 }}>
+              {quizIndex + 1 >= words.length ? 'See results →' : 'Next question →'}
+            </button>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // FINISHED
   if (finished) return (
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-      <img src="/seal.svg" height="80" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem' }} />
+      <img src="/seal.svg" height="80" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem', cursor: 'pointer' }} onClick={() => router.push('/landing')} />
       <div style={{ textAlign: 'center', maxWidth: 480 }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
         <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12, fontFamily: '"Playfair Display", Georgia, serif' }}>You've learned 20 words!</h2>
@@ -92,6 +220,9 @@ export default function Demo() {
           <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
             Get full access
           </button>
+          <button onClick={startQuiz} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.brown, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
+            Test me 🧠
+          </button>
           <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false) }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
             Learn again
           </button>
@@ -101,6 +232,7 @@ export default function Demo() {
     </div>
   )
 
+  // LEARN
   return (
     <div style={{ minHeight: '100vh', background: s.bg }}>
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', borderBottom: `1px solid ${s.border}`, background: s.card }}>
@@ -163,7 +295,6 @@ export default function Demo() {
         <div style={{ textAlign: 'center', padding: '1rem', background: '#fdf0ee', borderRadius: 8, border: `1px solid #e8c0b8` }}>
           <span style={{ fontSize: 13, color: s.red }}>✨ Enjoying this? </span>
           <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontWeight: 700, textDecoration: 'underline' }}>Get full access</button>
-          
         </div>
       </div>
     </div>
