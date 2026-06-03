@@ -141,16 +141,18 @@ export default function Demo() {
           <p style={{ fontSize: 15, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
             Ready to learn all 300 HSK1 words with mnemonics, audio and progress tracking?
           </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
-            <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center', marginBottom: 16 }}>
+            <button onClick={handleSubscribe} style={{ width: '100%', maxWidth: 320, padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
               Get full access
             </button>
-            <button onClick={startQuiz} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.brown, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
-              Try again 🧠
-            </button>
-            <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false); setMode('learn') }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
-              Learn again
-            </button>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button onClick={startQuiz} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
+                Try again
+              </button>
+              <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false); setMode('learn') }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
+                Learn again
+              </button>
+            </div>
           </div>
           <button onClick={() => router.push('/landing')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 14 }}>← Back to home</button>
         </div>
@@ -216,16 +218,18 @@ export default function Demo() {
         <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
           Get full access, track your progress, and never forget a word again.
         </p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
-          <button onClick={handleSubscribe} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center', marginBottom: 16 }}>
+          <button onClick={handleSubscribe} style={{ width: '100%', maxWidth: 320, padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
             Get full access
           </button>
-          <button onClick={startQuiz} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.brown, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>
-            Test me 🧠
-          </button>
-          <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false) }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
-            Learn again
-          </button>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button onClick={startQuiz} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
+              Test me
+            </button>
+            <button onClick={() => { setCurrent(0); setFlipped(false); setFinished(false) }} style={{ padding: '14px 32px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer' }}>
+              Learn again
+            </button>
+          </div>
         </div>
         <button onClick={() => router.push('/landing')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 14 }}>← Back to home</button>
       </div>
