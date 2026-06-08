@@ -563,11 +563,11 @@ export default function Home() {
           </div>
         ) : word ? (
           <>
-            <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 600 }}>
+            <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 380 }}>
               <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
 
                 {/* Front */}
-                <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 600, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column' }}>
+                <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase' }}>{`HSK ${word.hsk_level}`}</div>
                   </div>
@@ -585,7 +585,7 @@ export default function Home() {
                 </div>
 
                 {/* Back */}
-                <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 600, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
+                <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase' }}>{`HSK ${word.hsk_level}`}</div>
                   </div>
