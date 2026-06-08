@@ -16,6 +16,7 @@ body {
 
 .flip-card {
   perspective: 1000px;
+  width: 100%;
 }
 
 .flip-card-inner {
@@ -34,6 +35,8 @@ body {
 .flip-card-back {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 .flip-card-back {
