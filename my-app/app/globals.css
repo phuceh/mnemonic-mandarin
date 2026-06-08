@@ -15,7 +15,6 @@ body {
 }
 
 .flip-card {
-  perspective: 1000px;
   width: 100%;
 }
 
@@ -23,28 +22,34 @@ body {
   position: relative;
   width: 100%;
   min-height: 380px;
-  transition: transform 0.5s ease;
-  transform-style: preserve-3d;
-}
-
-.flip-card-inner.flipped {
-  transform: rotateY(180deg);
 }
 
 .flip-card-front,
 .flip-card-back {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   width: 100%;
   max-width: 100%;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .flip-card-back {
-  transform: rotateY(180deg);
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  opacity: 0;
+  transform: scaleY(0.95);
+  pointer-events: none;
+}
+
+.flip-card-inner.flipped .flip-card-front {
+  opacity: 0;
+  transform: scaleY(0.95);
+  pointer-events: none;
+}
+
+.flip-card-inner.flipped .flip-card-back {
+  opacity: 1;
+  transform: scaleY(1);
+  pointer-events: auto;
 }
 
 button, input, textarea {
