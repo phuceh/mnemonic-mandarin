@@ -276,7 +276,7 @@ export default function Home() {
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Select level</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
           {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => {
-            const disabled = level !== 'all' && level !== 1
+            const disabled = level !== 'all' && level !== 1 && level !== 2
             return (
               <button key={level} onClick={() => { if (!disabled) setQuizLevel(level) }} style={{ padding: '10px 6px', borderRadius: 8, border: '1px solid', borderColor: quizLevel === level ? s.red : s.border, background: quizLevel === level ? s.red : s.card, color: quizLevel === level ? '#fff' : disabled ? '#ccc' : s.brown, cursor: disabled ? 'default' : 'pointer', fontSize: 13, fontFamily: 'Georgia, serif', opacity: disabled ? 0.5 : 1 }}>
                 {level === 'all' ? 'All' : `HSK ${level}`}
@@ -563,11 +563,11 @@ export default function Home() {
           </div>
         ) : word ? (
           <>
-            <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 380 }}>
+            <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 600 }}>
               <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
 
                 {/* Front */}
-                <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column' }}>
+                <div className="flip-card-front" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 600, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase' }}>{`HSK ${word.hsk_level}`}</div>
                   </div>
@@ -585,7 +585,7 @@ export default function Home() {
                 </div>
 
                 {/* Back */}
-                <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 380, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
+                <div className="flip-card-back" style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', minHeight: 600, boxShadow: '0 8px 32px rgba(192,57,43,0.08)' }}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase' }}>{`HSK ${word.hsk_level}`}</div>
                   </div>
