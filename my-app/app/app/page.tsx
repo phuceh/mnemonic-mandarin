@@ -422,7 +422,7 @@ export default function Home() {
 
   // LEARN
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: s.bg }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: s.bg, overflowX: 'hidden' }}>
       {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
       {gridOpen && <div onClick={() => setGridOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
 
