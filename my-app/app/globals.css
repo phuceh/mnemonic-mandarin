@@ -16,7 +16,6 @@ body {
 
 .flip-card {
   perspective: 1000px;
-  overflow: hidden;
 }
 
 .flip-card-inner {
