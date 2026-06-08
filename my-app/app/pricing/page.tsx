@@ -33,7 +33,7 @@ export default function Pricing() {
   }
 
   const features = [
-    'All 300 HSK1 words',
+    'All 500 HSK1-2 words',
     'Mnemonic stories for every word',
     'Custom illustrations',
     'Native audio pronunciation',
@@ -45,7 +45,7 @@ export default function Pricing() {
 
   const roadmap = [
     { level: 'HSK 1', words: '300 words', status: 'available' },
-    { level: 'HSK 2', words: '200 words (500 total)', status: 'soon' },
+    { level: 'HSK 2', words: '200 words (500 total)', status: 'available' },
     { level: 'HSK 3', words: '500 words (1,000 total)', status: 'soon' },
     { level: 'HSK 4', words: '1,000 words (2,000 total)', status: 'planned' },
     { level: 'HSK 5', words: '1,600 words (3,600 total)', status: 'planned' },
@@ -140,7 +140,7 @@ export default function Pricing() {
 
       <footer style={{ background: s.card, borderTop: `1px solid ${s.border}`, padding: '2rem', textAlign: 'center', marginTop: '4rem' }}>
         <img src="/seal.svg" height="60" alt="Memorize Mandarin" style={{ marginBottom: 8 }} />
-        <div style={{ fontSize: 12, color: s.lightbrown, marginBottom: 8 }}>Mandarin vocabulary with mnemonics · HSK1 available now</div>
+        <div style={{ fontSize: 12, color: s.lightbrown, marginBottom: 8 }}>Mandarin vocabulary with mnemonics · HSK1-2 available now</div>
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
           <button onClick={() => router.push('/contact')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 12, textDecoration: 'underline' }}>Contact us</button>
           <button onClick={() => router.push('/legal')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 12, textDecoration: 'underline' }}>Terms & Privacy</button>

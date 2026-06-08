@@ -31,7 +31,7 @@ export default function Landing() {
     { emoji: '📖', title: 'Flashcard learning', desc: 'Browse words by HSK level at your own pace. Tap to reveal the mnemonic and save words you want to revisit.' },
     { emoji: '🧪', title: 'Quiz yourself', desc: 'Test your knowledge with multiple choice quizzes. Track your score and streak as you go.' },
     { emoji: '📈', title: 'Track progress', desc: 'Mark words as learned and watch your progress bars fill up across each HSK level.' },
-    { emoji: '🎯', title: 'HSK aligned', desc: 'Content follows the HSK standard, the international benchmark for Mandarin proficiency. HSK1 is available now, with more levels coming soon.' },
+    { emoji: '🎯', title: 'HSK aligned', desc: 'Content follows the HSK standard, the international benchmark for Mandarin proficiency. HSK1-2 is available now, with more levels coming soon.' },
   ]
 
   const examples = [
@@ -65,7 +65,7 @@ export default function Landing() {
           <button onClick={() => router.push('/demo')} style={{ padding: '14px 32px', borderRadius: 10, border: '1px solid #e8ddd0', background: s.card, color: s.brown, fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Try for free</button>
           <button onClick={() => router.push('/pricing')} style={{ padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>Get full access</button>
         </div>
-        <div style={{ fontSize: 14, color: s.muted, marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel subscription anytime · Lifetime access available</div>
+        <div style={{ fontSize: 14, color: s.muted, marginTop: 12 }}>HSK1-2 available now · HSK3+ coming soon · Cancel subscription anytime · Lifetime access available</div>
       </section>
 
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 2rem 5rem' }}>
@@ -141,12 +141,12 @@ export default function Landing() {
             Get full access
           </button>
         </div>
-        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>HSK1 available now · HSK2+ coming soon · Cancel subscription anytime · Lifetime access available</div>
+        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 12 }}>HSK1-2 available now · HSK3+ coming soon · Cancel subscription anytime · Lifetime access available</div>
       </section>
 
       <footer style={{ background: s.card, borderTop: '1px solid #e8ddd0', padding: '2rem', textAlign: 'center' }}>
         <img src="/seal.svg" height="60" alt="Memorize Mandarin" style={{ marginBottom: 8 }} />
-        <div style={{ fontSize: 12, color: s.lightbrown, marginBottom: 8 }}>Mandarin vocabulary with mnemonics · HSK1 available now</div>
+        <div style={{ fontSize: 12, color: s.lightbrown, marginBottom: 8 }}>Mandarin vocabulary with mnemonics · HSK1-2 available now</div>
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
           <button onClick={() => router.push('/contact')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 12, textDecoration: 'underline' }}>Contact us</button>
           <button onClick={() => router.push('/legal')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.lightbrown, fontSize: 12, textDecoration: 'underline' }}>Terms & Privacy</button>
