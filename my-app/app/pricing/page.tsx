@@ -71,20 +71,14 @@ export default function Pricing() {
           <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7 }}>Start with a free trial. Upgrade when you're ready.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: '5rem' }}>
+        {/* Pricing cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, marginBottom: '2rem' }}>
 
           {/* Monthly */}
           <div style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2rem' }}>
             <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase', marginBottom: '1rem' }}>Monthly</div>
             <div style={{ fontSize: 42, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: 4 }}>£1</div>
             <div style={{ fontSize: 14, color: s.muted, marginBottom: '2rem' }}>per month · cancel anytime · future levels included</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: '2rem' }}>
-              {features.map((f, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: s.brown }}>
-                  <span style={{ color: s.green, fontWeight: 700 }}>✓</span> {f}
-                </div>
-              ))}
-            </div>
             <button onClick={handleMonthly} style={{ width: '100%', padding: '14px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 15, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
               Get monthly access →
             </button>
@@ -96,13 +90,6 @@ export default function Pricing() {
             <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase', marginBottom: '1rem' }}>Lifetime</div>
             <div style={{ fontSize: 42, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: 4 }}>£20</div>
             <div style={{ fontSize: 14, color: s.muted, marginBottom: '2rem' }}>one-time payment · future levels included</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: '2rem' }}>
-              {features.map((f, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: s.brown }}>
-                  <span style={{ color: s.green, fontWeight: 700 }}>✓</span> {f}
-                </div>
-              ))}
-            </div>
             <button onClick={handleLifetime} style={{ width: '100%', padding: '14px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 15, cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
               Get lifetime access →
             </button>
@@ -110,15 +97,29 @@ export default function Pricing() {
 
         </div>
 
-        <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-          <div style={{ display: 'inline-block', background: '#fdf0ee', border: `1px solid #e8c0b8`, borderRadius: 10, padding: '1rem 2rem', fontSize: 14, color: s.red }}>
-            ✨ Not sure yet? <button onClick={() => router.push('/demo')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontWeight: 700, textDecoration: 'underline', fontSize: 14 }}>Try 20 words for free</button> - no account needed.
+        {/* Shared features */}
+        <div style={{ background: s.card, border: `1px solid ${s.border}`, borderRadius: 12, padding: '2rem', marginBottom: '5rem' }}>
+          <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, textTransform: 'uppercase', marginBottom: '1.25rem' }}>Everything included in both plans</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10 }}>
+            {features.map((f, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: s.brown }}>
+                <span style={{ color: s.green, fontWeight: 700 }}>✓</span> {f}
+              </div>
+            ))}
           </div>
         </div>
 
+        {/* Free trial note */}
+        <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+          <div style={{ display: 'inline-block', background: '#fdf0ee', border: `1px solid #e8c0b8`, borderRadius: 10, padding: '1rem 2rem', fontSize: 14, color: s.red }}>
+            ✨ Not sure yet? <button onClick={() => router.push('/demo')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontWeight: 700, textDecoration: 'underline', fontSize: 14 }}>Try 20 words for free</button> — no account needed.
+          </div>
+        </div>
+
+        {/* Roadmap */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ fontSize: 10, letterSpacing: 3, color: s.red, textTransform: 'uppercase', marginBottom: '1rem' }}>Content roadmap</div>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included - and what's coming</h2>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included — and what's coming</h2>
           <p style={{ fontSize: 14, color: s.muted, marginBottom: '2.5rem' }}>Both plans include every level as it's released.</p>
         </div>
 
