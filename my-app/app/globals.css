@@ -25,6 +25,7 @@ body {
   min-height: 380px;
   transition: transform 0.5s ease;
   transform-style: preserve-3d;
+  transform-origin: top center;
 }
 
 .flip-card-inner.flipped {
