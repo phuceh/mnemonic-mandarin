@@ -119,7 +119,7 @@ export default function Pricing() {
         {/* Roadmap */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ fontSize: 10, letterSpacing: 3, color: s.red, textTransform: 'uppercase', marginBottom: '1rem' }}>Content roadmap</div>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included — and what's coming</h2>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: '"Playfair Display", Georgia, serif', marginBottom: '0.5rem' }}>What's included - and what's coming</h2>
           <p style={{ fontSize: 14, color: s.muted, marginBottom: '2.5rem' }}>Both plans include every level as it's released.</p>
         </div>
 

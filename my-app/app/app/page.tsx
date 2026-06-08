@@ -532,7 +532,7 @@ export default function Home() {
         </div>
       </div>
 
-      <main style={{ flex: 1, maxWidth: 580, margin: '0 auto', padding: '2rem 1.5rem' }}>
+      <main style={{ flex: 1, maxWidth: 580, margin: '0 auto', padding: '2rem 1.5rem', overflowX: 'hidden' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem' }}>
           <button onClick={() => setMenuOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: s.brown, padding: '4px 8px 4px 0' }}>☰</button>
           <div style={{ flex: 1, textAlign: 'center' }}>
