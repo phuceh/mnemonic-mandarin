@@ -7,6 +7,7 @@
 body {
   background: #f7f3ee;
   font-family: 'Lora', Georgia, serif;
+  overflow-x: hidden;
 }
 
 * {
