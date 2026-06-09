@@ -455,7 +455,7 @@ export default function Home() {
         ].map(({ level, words: wordCount, comingSoon }) => (
           <button key={`future-${level}`} disabled style={{ ...menuBtn, borderColor: s.border, background: 'transparent', color: s.brown, cursor: 'default', opacity: 0.4 }}>
             <span>HSK {level} ({wordCount.toLocaleString()})</span>
-            {comingSoon && <span style={{ fontSize: 10, color: s.red, marginLeft: 8, letterSpacing: 1, fontWeight: 900 }}>COMING SOON</span>}
+            {comingSoon && <span style={{ fontSize: 9, color: s.red, marginLeft: 6, letterSpacing: 0.5, fontWeight: 900, whiteSpace: 'nowrap' }}>COMING SOON</span>}
           </button>
         ))}
 
