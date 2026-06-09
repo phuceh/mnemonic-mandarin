@@ -438,16 +438,26 @@ export default function Home() {
         </button>
 
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, marginBottom: 10, textTransform: 'uppercase' }}>HSK Level</div>
-        {(['all', 1, 2, 3] as any[]).map(level => {
+        {(['all', 1, 2] as any[]).map(level => {
           const totalAll = Object.values(progress).reduce((a, b) => a + b.total, 0)
           const count = level === 'all' ? totalAll : progress[level]?.total ?? 0
           return (
-            <button key={level} onClick={() => { if (level !== 3) { setHskLevel(level); setMenuOpen(false) } }} style={{ ...menuBtn, borderColor: hskLevel === level ? s.red : s.border, background: hskLevel === level ? s.red : 'transparent', color: hskLevel === level ? '#fff' : s.brown, cursor: level === 3 ? 'default' : 'pointer', opacity: level === 3 ? 0.7 : 1 }}>
+            <button key={level} onClick={() => { setHskLevel(level); setMenuOpen(false) }} style={{ ...menuBtn, borderColor: hskLevel === level ? s.red : s.border, background: hskLevel === level ? s.red : 'transparent', color: hskLevel === level ? '#fff' : s.brown, cursor: 'pointer' }}>
               <span>{level === 'all' ? 'All words' : `HSK ${level}`}{count > 0 && ` (${count})`}</span>
-              {level === 3 && <span style={{ fontSize: 10, color: s.red, marginLeft: 8, letterSpacing: 1, fontWeight: 900 }}>COMING SOON</span>}
             </button>
           )
         })}
+        {[
+          { level: 3, words: 500, comingSoon: true },
+          { level: 4, words: 1000, comingSoon: true },
+          { level: 5, words: 1600, comingSoon: false },
+          { level: 6, words: 1800, comingSoon: false },
+        ].map(({ level, words: wordCount, comingSoon }) => (
+          <button key={`future-${level}`} disabled style={{ ...menuBtn, borderColor: s.border, background: 'transparent', color: s.brown, cursor: 'default', opacity: 0.4 }}>
+            <span>HSK {level} ({wordCount.toLocaleString()})</span>
+            {comingSoon && <span style={{ fontSize: 10, color: s.red, marginLeft: 8, letterSpacing: 1, fontWeight: 900 }}>COMING SOON</span>}
+          </button>
+        ))}
 
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, margin: '1.5rem 0 10px', textTransform: 'uppercase' }}>My Words</div>
         <button onClick={() => { setHskLevel('saved'); setMenuOpen(false) }} style={{ ...menuBtn, borderColor: hskLevel === 'saved' ? s.red : s.border, background: hskLevel === 'saved' ? s.red : 'transparent', color: hskLevel === 'saved' ? '#fff' : s.brown }}>
