@@ -139,7 +139,7 @@ export default function Demo() {
             <div style={{ height: '100%', background: pct >= 60 ? s.green : s.red, borderRadius: 4, width: `${pct}%`, transition: 'width 0.8s' }} />
           </div>
           <p style={{ fontSize: 15, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
-            Ready to learn all 300 HSK1 words with mnemonics, audio and progress tracking?
+            Ready to learn all 1,000 HSK1-3 words with mnemonics, audio and progress tracking?
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center', marginBottom: 16 }}>
             <button onClick={handleSubscribe} style={{ width: '100%', maxWidth: 320, padding: '14px 32px', borderRadius: 10, border: 'none', background: s.red, color: '#fff', fontSize: 16, cursor: 'pointer', fontWeight: 700 }}>

@@ -276,7 +276,7 @@ export default function Home() {
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.red, marginBottom: 12, textTransform: 'uppercase' }}>Select level</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
           {(['all', 1, 2, 3, 4, 5, 6] as any[]).map(level => {
-            const disabled = level !== 'all' && level !== 1 && level !== 2
+            const disabled = level !== 'all' && level !== 1 && level !== 2 && level !== 3
             return (
               <button key={level} onClick={() => { if (!disabled) setQuizLevel(level) }} style={{ padding: '10px 6px', borderRadius: 8, border: '1px solid', borderColor: quizLevel === level ? s.red : s.border, background: quizLevel === level ? s.red : s.card, color: quizLevel === level ? '#fff' : disabled ? '#ccc' : s.brown, cursor: disabled ? 'default' : 'pointer', fontSize: 13, fontFamily: 'Georgia, serif', opacity: disabled ? 0.5 : 1 }}>
                 {level === 'all' ? 'All' : `HSK ${level}`}
@@ -438,7 +438,7 @@ export default function Home() {
         </button>
 
         <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, marginBottom: 10, textTransform: 'uppercase' }}>HSK Level</div>
-        {(['all', 1, 2] as any[]).map(level => {
+        {(['all', 1, 2, 3] as any[]).map(level => {
           const totalAll = Object.values(progress).reduce((a, b) => a + b.total, 0)
           const count = level === 'all' ? totalAll : progress[level]?.total ?? 0
           return (
@@ -448,7 +448,6 @@ export default function Home() {
           )
         })}
         {[
-          { level: 3, words: 500, comingSoon: true },
           { level: 4, words: 1000, comingSoon: true },
           { level: 5, words: 1600, comingSoon: false },
           { level: 6, words: 1800, comingSoon: false },

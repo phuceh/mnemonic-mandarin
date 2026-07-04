@@ -33,7 +33,7 @@ export default function Pricing() {
   }
 
   const features = [
-    'All 500 HSK1-2 words',
+    'All 1,000 HSK1-3 words',
     'Mnemonic stories for every word',
     'Custom illustrations',
     'Native audio pronunciation',
@@ -46,7 +46,7 @@ export default function Pricing() {
   const roadmap = [
     { level: 'HSK 1', words: '300 words', status: 'available' },
     { level: 'HSK 2', words: '200 words (500 total)', status: 'available' },
-    { level: 'HSK 3', words: '500 words (1,000 total)', status: 'soon' },
+    { level: 'HSK 3', words: '500 words (1,000 total)', status: 'available' },
     { level: 'HSK 4', words: '1,000 words (2,000 total)', status: 'planned' },
     { level: 'HSK 5', words: '1,600 words (3,600 total)', status: 'planned' },
     { level: 'HSK 6', words: '1,800 words (5,400 total)', status: 'planned' },
