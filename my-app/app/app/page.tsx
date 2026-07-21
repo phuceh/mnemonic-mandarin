@@ -188,6 +188,17 @@ export default function Home() {
   const isLearned = word && learned.has(word.id)
   const quizWord = quizWords[quizIndex]
 
+  // Preload next and previous card images
+  useEffect(() => {
+    const toPreload = [current + 1, current - 1].filter(i => i >= 0 && i < words.length)
+    toPreload.forEach(i => {
+      if (words[i]?.image_url) {
+        const img = new Image()
+        img.src = words[i].image_url
+      }
+    })
+  }, [current, words])
+
   const menuBtn: React.CSSProperties = {
     padding: '8px 16px', borderRadius: 6, border: '1px solid',
     cursor: 'pointer', fontSize: 14, textAlign: 'left' as const,
