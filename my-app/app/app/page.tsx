@@ -572,6 +572,7 @@ export default function Home() {
           </div>
         ) : word ? (
           <>
+            <div className="flip-card-wrapper">
             <div className="flip-card" onClick={() => setFlipped(!flipped)} style={{ marginBottom: '1rem', cursor: 'pointer', minHeight: 380 }}>
               <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
 
@@ -614,6 +615,7 @@ export default function Home() {
                 </div>
 
               </div>
+            </div>
             </div>
 
             <div style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
