@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { IoBulbOutline, IoVolumeHighOutline, IoBookOutline, IoSchoolOutline, IoStatsChartOutline, IoRibbonOutline } from 'react-icons/io5'
 
 export default function Landing() {
   const router = useRouter()
@@ -26,12 +27,12 @@ export default function Landing() {
   }
 
   const features = [
-    { emoji: '🧠', title: 'Mnemonic stories', desc: 'Every word comes with a vivid, absurd story that phonetically encodes the sound. Your brain remembers stories, not lists.' },
-    { emoji: '🔊', title: 'Native pronunciation', desc: 'Hear every word spoken clearly in Mandarin. Tones are colour-coded so you always know how to say it correctly.' },
-    { emoji: '📖', title: 'Flashcard learning', desc: 'Browse words by HSK level at your own pace. Tap to reveal the mnemonic and save words you want to revisit.' },
-    { emoji: '🧪', title: 'Quiz yourself', desc: 'Test your knowledge with multiple choice quizzes. Track your score and streak as you go.' },
-    { emoji: '📈', title: 'Track progress', desc: 'Mark words as learned and watch your progress bars fill up across each HSK level.' },
-    { emoji: '🎯', title: 'HSK aligned', desc: 'Content follows the HSK standard, the international benchmark for Mandarin proficiency. HSK1-3 is available now, with more levels coming soon.' },
+    { icon: <IoBulbOutline size={30} color={s.red} />, title: 'Mnemonic stories', desc: 'Every word comes with a vivid, absurd story that phonetically encodes the sound. Your brain remembers stories, not lists.' },
+    { icon: <IoVolumeHighOutline size={30} color={s.red} />, title: 'Native pronunciation', desc: 'Hear every word spoken clearly in Mandarin. Tones are colour-coded so you always know how to say it correctly.' },
+    { icon: <IoBookOutline size={30} color={s.red} />, title: 'Flashcard learning', desc: 'Browse words by HSK level at your own pace. Tap to reveal the mnemonic and save words you want to revisit.' },
+    { icon: <IoSchoolOutline size={30} color={s.red} />, title: 'Quiz yourself', desc: 'Test your knowledge with multiple choice quizzes. Track your score and streak as you go.' },
+    { icon: <IoStatsChartOutline size={30} color={s.red} />, title: 'Track progress', desc: 'Mark words as learned and watch your progress bars fill up across each HSK level.' },
+    { icon: <IoRibbonOutline size={30} color={s.red} />, title: 'HSK aligned', desc: 'Content follows the HSK standard, the international benchmark for Mandarin proficiency. HSK1-3 is available now, with more levels coming soon.' },
   ]
 
   const examples = [
@@ -79,7 +80,9 @@ export default function Landing() {
                 <div style={{ fontSize: 16, color: s.muted, marginBottom: 4, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{ex.pinyin}</div>
                 <div style={{ fontSize: 13, color: s.lightbrown, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>{ex.english}</div>
                 {ex.audio && (
-                  <button onClick={() => new Audio(ex.audio).play()} style={{ padding: '5px 16px', borderRadius: 20, border: '1px solid #e8ddd0', background: '#fff', cursor: 'pointer', fontSize: 12, color: s.muted, fontFamily: 'Georgia, serif' }}>🔊 Listen</button>
+                  <button onClick={() => new Audio(ex.audio).play()} style={{ padding: '5px 16px', borderRadius: 20, border: '1px solid #e8ddd0', background: '#fff', cursor: 'pointer', fontSize: 12, color: s.muted, fontFamily: 'Georgia, serif' }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IoVolumeHighOutline size={15} color={s.red} />Listen</span>
+                  </button>
                 )}
               </div>
               <hr style={{ border: 'none', borderTop: '1px solid #e8ddd0', margin: '1rem 0' }} />
@@ -100,7 +103,7 @@ export default function Landing() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
             {features.map((f, i) => (
               <div key={i} style={{ padding: '1.5rem', borderRadius: 12, border: '1px solid #e8ddd0', background: s.bg }}>
-                <div style={{ fontSize: 28, marginBottom: 10 }}>{f.emoji}</div>
+                <div style={{ marginBottom: 10, display: 'flex' }}>{f.icon}</div>
                 <div style={{ fontSize: 16, fontWeight: 700, color: s.text, marginBottom: 6 }}>{f.title}</div>
                 <div style={{ fontSize: 14, color: s.muted, lineHeight: 1.6 }}>{f.desc}</div>
               </div>
