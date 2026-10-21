@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { IoTrophyOutline, IoThumbsUpOutline, IoBarbellOutline, IoCheckmarkCircleOutline, IoVolumeHighOutline, IoSparklesOutline, IoArrowBack } from 'react-icons/io5'
 
 type Word = {
   word_id: number
@@ -125,12 +126,12 @@ export default function Demo() {
   if (mode === 'results') {
     const pct = Math.round((score / words.length) * 100)
     const msg = pct === 100 ? 'Perfect score!' : pct >= 80 ? 'Excellent work!' : pct >= 60 ? 'Good effort!' : 'Keep practising!'
-    const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '📚'
+    const ResultIcon = pct >= 80 ? IoTrophyOutline : pct >= 60 ? IoThumbsUpOutline : IoBarbellOutline
     return (
       <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
         <img src="/seal.svg" height="80" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem', cursor: 'pointer' }} onClick={() => router.push('/landing')} />
         <div style={{ textAlign: 'center', maxWidth: 480, width: '100%' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>{emoji}</div>
+          <div style={{ fontSize: 48, marginBottom: 16, color: s.red, display: 'flex', justifyContent: 'center' }}><ResultIcon /></div>
           <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12, fontFamily: '"Playfair Display", Georgia, serif' }}>
             You remembered {score} / {words.length} words!
           </h2>
@@ -213,7 +214,7 @@ export default function Demo() {
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
       <img src="/seal.svg" height="80" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 1.5rem', cursor: 'pointer' }} onClick={() => router.push('/landing')} />
       <div style={{ textAlign: 'center', maxWidth: 480 }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+        <div style={{ fontSize: 48, marginBottom: 16, color: s.red, display: 'flex', justifyContent: 'center' }}><IoCheckmarkCircleOutline /></div>
         <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12, fontFamily: '"Playfair Display", Georgia, serif' }}>You've learned 20 words!</h2>
         <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
           Get full access, track your progress, and never forget a word again.
@@ -265,7 +266,9 @@ export default function Demo() {
                 <div style={{ fontSize: 16, color: s.lightbrown, letterSpacing: 1, marginBottom: 16, textTransform: 'uppercase' }}>{word.english}</div>
               </div>
               <div style={{ textAlign: 'center', marginTop: 'auto', paddingTop: '1rem' }}>
-                <button onClick={playAudio} style={{ padding: '7px 20px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted }}>🔊 Listen</button>
+                <button onClick={playAudio} style={{ padding: '7px 20px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IoVolumeHighOutline size={16} color={s.red} />Listen</span>
+                </button>
                 <div style={{ fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '1rem' }}>tap to reveal mnemonic</div>
               </div>
             </div>
@@ -290,14 +293,15 @@ export default function Demo() {
         </div>
 
         <div style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
-          <button onClick={prev} disabled={current === 0} style={{ width: 64, flexShrink: 0, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: current === 0 ? 'default' : 'pointer', fontSize: 20, color: current === 0 ? s.border : s.brown }}>←</button>
+          <button onClick={prev} disabled={current === 0} style={{ width: 64, flexShrink: 0, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: current === 0 ? 'default' : 'pointer', fontSize: 20, color: current === 0 ? s.border : s.brown, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IoArrowBack size={20} /></button>
           <button onClick={next} style={{ flex: 2, height: 48, borderRadius: 8, border: 'none', background: s.red, cursor: 'pointer', fontSize: 14, color: '#fff', fontWeight: 700 }}>
             {current + 1 >= words.length ? 'Finish →' : 'Next →'}
           </button>
         </div>
 
-        <div style={{ textAlign: 'center', padding: '1rem', background: '#fdf0ee', borderRadius: 8, border: `1px solid #e8c0b8` }}>
-          <span style={{ fontSize: 13, color: s.red }}>✨ Enjoying this? </span>
+        <div style={{ textAlign: 'center', padding: '1rem', background: '#fdf0ee', borderRadius: 8, border: `1px solid #e8c0b8`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          <IoSparklesOutline size={15} color={s.red} />
+          <span style={{ fontSize: 13, color: s.red }}>Enjoying this? </span>
           <button onClick={handleSubscribe} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.red, fontSize: 13, fontWeight: 700, textDecoration: 'underline' }}>Get full access</button>
         </div>
       </div>
