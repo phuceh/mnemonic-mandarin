@@ -1,4 +1,5 @@
 'use client'
+import { IoCheckmarkCircleOutline, IoWarningOutline } from 'react-icons/io5'
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
@@ -39,7 +40,7 @@ function SuccessContent() {
       )}
       {status === 'success' && (
         <div style={{ textAlign: 'center', maxWidth: 480 }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+          <div style={{ fontSize: 48, marginBottom: 16, color: '#2c7a4b', display: 'flex', justifyContent: 'center' }}><IoCheckmarkCircleOutline /></div>
           <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12 }}>Welcome to Memorize Mandarin!</h2>
           <p style={{ fontSize: 16, color: s.muted, lineHeight: 1.7, marginBottom: '2rem' }}>
             Your payment is confirmed. Redirecting you now...
@@ -48,7 +49,7 @@ function SuccessContent() {
       )}
       {status === 'error' && (
         <div style={{ textAlign: 'center', maxWidth: 480 }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
+          <div style={{ fontSize: 48, marginBottom: 16, color: '#c0392b', display: 'flex', justifyContent: 'center' }}><IoWarningOutline /></div>
           <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, marginBottom: 12 }}>Something went wrong</h2>
           <p style={{ fontSize: 16, color: s.muted, marginBottom: '2rem' }}>Please contact support if you were charged.</p>
           <button onClick={() => router.push('/landing')} style={{ padding: '12px 24px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>Back to home</button>

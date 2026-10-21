@@ -1,4 +1,5 @@
 'use client'
+import { IoCheckmarkCircleOutline } from 'react-icons/io5'
 import { useState, Suspense } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -55,7 +56,7 @@ function AuthForm() {
 
       {subscribed && !isLogin && (
         <div style={{ width: '100%', maxWidth: 400, background: '#f0faf5', border: '1px solid #2c7a4b', borderRadius: 10, padding: '1rem 1.25rem', marginBottom: '1rem', textAlign: 'center' }}>
-          <div style={{ fontSize: 14, color: '#2c7a4b', fontFamily: 'Georgia, serif' }}>🎉 Payment confirmed! Create your account to get started.</div>
+          <div style={{ fontSize: 14, color: '#2c7a4b', fontFamily: 'Georgia, serif' }}><IoCheckmarkCircleOutline size={16} style={{ verticalAlign: 'middle', marginRight: 6 }} />Payment confirmed! Create your account to get started.</div>
         </div>
       )}
 

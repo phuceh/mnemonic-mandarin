@@ -1,4 +1,5 @@
 'use client'
+import { IoCheckmarkCircleOutline } from 'react-icons/io5'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import emailjs from '@emailjs/browser'
@@ -55,7 +56,7 @@ export default function Contact() {
 
         {sent ? (
           <div style={{ textAlign: 'center', padding: '1rem' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+            <div style={{ fontSize: 48, marginBottom: 16, color: '#2c7a4b', display: 'flex', justifyContent: 'center' }}><IoCheckmarkCircleOutline /></div>
             <h2 style={{ fontSize: 22, fontWeight: 700, color: s.text, marginBottom: 12 }}>Message sent!</h2>
             <p style={{ fontSize: 15, color: s.muted, marginBottom: '1.5rem' }}>Thanks for getting in touch. We'll get back to you as soon as possible.</p>
             <button onClick={() => router.push(isLoggedIn ? '/app' : '/landing')} style={{ padding: '10px 24px', borderRadius: 8, border: 'none', background: s.red, color: '#fff', fontSize: 14, cursor: 'pointer', fontFamily: 'Georgia, serif' }}>{isLoggedIn ? '← Back to app' : '← Back to home'}</button>
