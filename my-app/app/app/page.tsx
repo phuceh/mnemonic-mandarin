@@ -1,4 +1,5 @@
 'use client'
+import { IoBookOutline, IoSchoolOutline, IoFlame, IoVolumeHighOutline, IoMenuOutline, IoTrophyOutline, IoThumbsUpOutline, IoBarbellOutline, IoShuffle, IoArrowBack, IoArrowForward } from 'react-icons/io5'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
@@ -253,12 +254,12 @@ export default function Home() {
 
       <div style={{ display: 'flex', gap: 16, width: '100%', maxWidth: 480 }}>
         <button onClick={() => { setMode('learn'); fetchWords() }} style={{ flex: 1, padding: '2rem 1rem', borderRadius: 12, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', textAlign: 'center' as const, borderTop: `3px solid ${s.red}` }}>
-          <div style={{ fontSize: 32, marginBottom: 8 }}>📖</div>
+          <div style={{ fontSize: 32, marginBottom: 8, color: s.red, display: 'flex', justifyContent: 'center' }}><IoBookOutline /></div>
           <div style={{ fontSize: 18, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 4 }}>Learn</div>
           <div style={{ fontSize: 13, color: s.lightbrown, fontFamily: 'Georgia, serif' }}>Browse flashcards with mnemonics</div>
         </button>
         <button onClick={() => setMode('quiz' as any)} style={{ flex: 1, padding: '2rem 1rem', borderRadius: 12, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', textAlign: 'center' as const, borderTop: `3px solid ${s.red}` }}>
-          <div style={{ fontSize: 32, marginBottom: 8 }}>🧠</div>
+          <div style={{ fontSize: 32, marginBottom: 8, color: s.red, display: 'flex', justifyContent: 'center' }}><IoSchoolOutline /></div>
           <div style={{ fontSize: 18, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 4 }}>Quiz</div>
           <div style={{ fontSize: 13, color: s.lightbrown, fontFamily: 'Georgia, serif' }}>Test your knowledge</div>
         </button>
@@ -279,7 +280,7 @@ export default function Home() {
     <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
       <button onClick={() => setMode('home')} style={{ position: 'absolute' as const, top: 24, left: 24, background: 'none', border: 'none', cursor: 'pointer', color: s.muted, fontSize: 14, fontFamily: 'Georgia, serif' }}>← Back</button>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div style={{ fontSize: 32, marginBottom: 12 }}>🧠</div>
+        <div style={{ fontSize: 32, marginBottom: 12, color: s.red, display: 'flex', justifyContent: 'center' }}><IoSchoolOutline /></div>
         <h2 style={{ fontSize: 28, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', marginBottom: 8 }}>Quiz</h2>
         <p style={{ fontSize: 14, color: s.muted, fontFamily: 'Georgia, serif' }}>Choose your level and test yourself</p>
       </div>
@@ -315,13 +316,13 @@ export default function Home() {
     const total = quizWords.length
     const pct = Math.round((score / total) * 100)
     const msg = pct === 100 ? 'Perfect score!' : pct >= 80 ? 'Excellent work!' : pct >= 60 ? 'Good effort!' : pct >= 40 ? 'Keep practising!' : 'Keep going!'
-    const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '📚'
+    const ResultIcon = pct >= 80 ? IoTrophyOutline : pct >= 60 ? IoThumbsUpOutline : IoBarbellOutline
 
     return (
       <div style={{ minHeight: '100vh', background: s.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '3rem 1.5rem' }}>
         <div style={{ width: '100%', maxWidth: 520 }}>
           <div style={{ background: s.card, border: `1px solid ${s.border}`, borderTop: `3px solid ${s.red}`, borderRadius: 12, padding: '2.5rem 2rem', textAlign: 'center', marginBottom: '1.5rem' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>{emoji}</div>
+            <div style={{ fontSize: 48, marginBottom: 12, color: s.red, display: 'flex', justifyContent: 'center' }}><ResultIcon /></div>
             <div style={{ fontSize: 14, color: s.lightbrown, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>Quiz complete</div>
             <div style={{ fontSize: 52, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif', lineHeight: 1, marginBottom: 4 }}>
               {score}<span style={{ fontSize: 24, color: s.lightbrown }}>/{total}</span>
@@ -372,7 +373,7 @@ export default function Home() {
           </div>
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, textTransform: 'uppercase' }}>Streak</div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>{streak} 🔥</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IoFlame size={18} color={s.red} />{streak}</span></div>
           </div>
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 10, letterSpacing: 2, color: s.lightbrown, textTransform: 'uppercase' }}>Progress</div>
@@ -390,7 +391,7 @@ export default function Home() {
         <div style={{ fontSize: 64, fontWeight: 700, color: s.text, lineHeight: 1, marginBottom: 10, fontFamily: 'serif' }}>{quizWord.chinese}</div>
         <div style={{ fontSize: 20, color: s.muted, fontFamily: 'Calibri, "Trebuchet MS", "Arial Unicode MS", sans-serif' }}>{quizWord.pinyin}</div>
         {quizWord.audio_url && (
-          <button onClick={(e) => playAudio(quizWord.audio_url, e)} style={{ marginTop: 16, padding: '6px 18px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif' }}>🔊 Listen</button>
+          <button onClick={(e) => playAudio(quizWord.audio_url, e)} style={{ marginTop: 16, padding: '6px 18px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif' }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IoVolumeHighOutline size={16} color={s.red} />Listen</span></button>
         )}
       </div>
 
@@ -554,7 +555,7 @@ export default function Home() {
 
       <main style={{ flex: 1, maxWidth: 580, margin: '0 auto', padding: '2rem 1.5rem', overflowX: 'hidden' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem' }}>
-          <button onClick={() => setMenuOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: s.brown, padding: '4px 8px 4px 0' }}>☰</button>
+          <button onClick={() => setMenuOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: s.brown, padding: '4px 8px 4px 0' }}><IoMenuOutline size={24} /></button>
           <div style={{ flex: 1, textAlign: 'center' }}>
             <img src="/seal.svg" height="48" alt="Memorize Mandarin" style={{ display: 'block', margin: '0 auto 4px' }} />
             <div style={{ fontSize: 16, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>Memorize Mandarin</div>
@@ -599,7 +600,7 @@ export default function Home() {
                   </div>
                   <div style={{ textAlign: 'center', marginTop: 'auto', paddingTop: '1rem' }}>
                     {word.audio_url && (
-                      <button onClick={(e) => playAudio(word.audio_url, e)} style={{ padding: '7px 20px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif' }}>🔊 Listen</button>
+                      <button onClick={(e) => playAudio(word.audio_url, e)} style={{ padding: '7px 20px', borderRadius: 24, border: `1px solid ${s.border}`, background: '#fff', cursor: 'pointer', fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif' }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IoVolumeHighOutline size={16} color={s.red} />Listen</span></button>
                     )}
                     <div style={{ fontSize: 13, color: '#c8a888', fontStyle: 'italic', marginTop: '1rem' }}>tap to reveal mnemonic</div>
                   </div>
@@ -630,19 +631,19 @@ export default function Home() {
             </div>
 
             <div style={{ display: 'flex', gap: 8, marginBottom: '1rem' }}>
-              <button onClick={prev} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', fontSize: 20, color: s.brown }}>←</button>
+              <button onClick={prev} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', fontSize: 20, color: s.brown, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IoArrowBack size={20} /></button>
               <button onClick={saveWord} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${isSaved ? s.red : s.border}`, background: isSaved ? '#fdf0ee' : s.card, cursor: 'pointer', fontSize: 13, color: isSaved ? s.red : s.brown, fontFamily: 'Georgia, serif' }}>
-                {isSaved ? 'Saved ✓' : 'Save'}
+                {isSaved ? 'Saved ★' : 'Save'}
               </button>
               <button onClick={() => setShuffle(!shuffle)} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${shuffle ? s.blue : s.border}`, background: shuffle ? '#e8f0fa' : s.card, cursor: 'pointer', fontSize: 13, color: shuffle ? s.blue : s.brown, fontFamily: 'Georgia, serif' }}>
-                {shuffle ? 'Shuffle ✓' : 'Shuffle'}
+                {shuffle ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>Shuffle <IoShuffle size={14} /></span> : 'Shuffle'}
               </button>
               {user && (
                 <button onClick={markLearned} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${isLearned ? s.green : s.border}`, background: isLearned ? '#f0faf5' : s.card, cursor: 'pointer', fontSize: 13, color: isLearned ? s.green : s.brown, fontFamily: 'Georgia, serif' }}>
                   {isLearned ? 'Learned ✓' : 'Learned'}
                 </button>
               )}
-              <button onClick={next} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', fontSize: 20, color: s.brown }}>→</button>
+              <button onClick={next} style={{ flex: 1, height: 48, borderRadius: 8, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', fontSize: 20, color: s.brown, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IoArrowForward size={20} /></button>
             </div>
             <div style={{ textAlign: 'center', fontSize: 12, color: '#c8a888', letterSpacing: 1, marginBottom: '1rem' }}>{current + 1} / {words.length}</div>
             {user && (
