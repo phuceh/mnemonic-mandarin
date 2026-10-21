@@ -1,5 +1,5 @@
 'use client'
-import { IoBookOutline, IoSchoolOutline, IoFlame, IoVolumeHighOutline, IoMenuOutline, IoTrophyOutline, IoThumbsUpOutline, IoBarbellOutline, IoShuffle, IoArrowBack, IoArrowForward } from 'react-icons/io5'
+import { IoBookOutline, IoSchoolOutline, IoFlame, IoVolumeHighOutline, IoMenuOutline, IoTrophyOutline, IoThumbsUpOutline, IoBarbellOutline, IoShuffle, IoArrowBack, IoArrowForward, IoStar } from 'react-icons/io5'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
@@ -268,7 +268,7 @@ export default function Home() {
       {saved.length > 0 && (
         <div style={{ marginTop: 16, width: '100%', maxWidth: 480 }}>
           <button onClick={() => { setHskLevel('saved'); setMode('learn') }} style={{ width: '100%', padding: '1rem', borderRadius: 12, border: `1px solid ${s.border}`, background: s.card, cursor: 'pointer', textAlign: 'center' as const }}>
-            <div style={{ fontSize: 14, color: s.brown, fontFamily: 'Georgia, serif' }}>⭐ Saved words ({saved.length})</div>
+            <div style={{ fontSize: 14, color: s.brown, fontFamily: 'Georgia, serif' }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IoStar size={14} color={s.red} />Saved words ({saved.length})</span></div>
           </button>
         </div>
       )}
