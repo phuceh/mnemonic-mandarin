@@ -1,6 +1,6 @@
 'use client'
 import { IoBookOutline, IoSchoolOutline, IoFlame, IoVolumeHighOutline, IoMenuOutline, IoTrophyOutline, IoThumbsUpOutline, IoBarbellOutline, IoShuffle, IoArrowBack, IoArrowForward, IoStar } from 'react-icons/io5'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
@@ -20,6 +20,8 @@ type Word = {
 
 const TONE_COLORS = ['#c0392b', '#8e6a3a', '#2c7a4b', '#1a5a8a']
 
+const plain = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+
 export default function Home() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
@@ -31,7 +33,8 @@ export default function Home() {
   const [hskLevel, setHskLevel] = useState<any>('all')
   const [menuOpen, setMenuOpen] = useState(false)
   const [gridOpen, setGridOpen] = useState(false)
-  const [gridView, setGridView] = useState<'chinese' | 'pinyin' | 'english'>('chinese')
+  const [gridSearch, setGridSearch] = useState('')
+  const [gridFilter, setGridFilter] = useState<'all' | 1 | 2 | 3 | 'saved'>('all')
   const [shuffle, setShuffle] = useState(false)
   const [loading, setLoading] = useState(false)
   const [learned, setLearned] = useState<Set<number>>(new Set())
@@ -47,6 +50,7 @@ export default function Home() {
   const [quizLoading, setQuizLoading] = useState(false)
   const [wrongAnswers, setWrongAnswers] = useState<Word[]>([])
   const [authChecked, setAuthChecked] = useState(false)
+  const [allWords, setAllWords] = useState<Word[]>([])
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -76,6 +80,7 @@ export default function Home() {
     if (user) {
       fetchLearned()
       fetchProgress()
+      fetchAllWords()
     }
   }, [user])
 
@@ -88,6 +93,15 @@ export default function Home() {
       }
     }
   }, [hskLevel, mode])
+
+  async function fetchAllWords() {
+    const { data } = await supabase.from('vocabulary').select('*')
+    const sorted = (data || []).sort((a, b) =>
+      a.pinyin.normalize('NFD').replace(/[\u0300-\u036f]/g, '').localeCompare(
+      b.pinyin.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+    )
+    setAllWords(sorted)
+  }
 
   async function fetchWords() {
     setLoading(true)
@@ -110,12 +124,12 @@ export default function Home() {
 
   async function fetchProgress() {
     if (!user) return
-    const { data: allWords } = await supabase.from('vocabulary').select('id, hsk_level')
+    const { data: allWordsData } = await supabase.from('vocabulary').select('id, hsk_level')
     const { data: learnedData } = await supabase.from('progress').select('vocabulary_id').eq('user_id', user.id).eq('learned', true)
     const learnedIds = new Set((learnedData || []).map(r => r.vocabulary_id))
     const prog: Record<number, { learned: number, total: number }> = {}
     for (let lvl = 1; lvl <= 6; lvl++) {
-      const levelWords = (allWords || []).filter(w => w.hsk_level === lvl)
+      const levelWords = (allWordsData || []).filter(w => w.hsk_level === lvl)
       prog[lvl] = { learned: levelWords.filter(w => learnedIds.has(w.id)).length, total: levelWords.length }
     }
     setProgress(prog)
@@ -188,6 +202,20 @@ export default function Home() {
   const isSaved = word && saved.find(w => w.id === word.id)
   const isLearned = word && learned.has(word.id)
   const quizWord = quizWords[quizIndex]
+
+  const filteredGridWords = useMemo(() => {
+    const q = plain(gridSearch.trim())
+    return allWords.filter(w => {
+      if (gridFilter === 'saved' && !saved.find(s => s.id === w.id)) return false
+      if (typeof gridFilter === 'number' && w.hsk_level !== gridFilter) return false
+      if (!q) return true
+      return (
+        w.chinese.includes(gridSearch.trim()) ||
+        plain(w.pinyin).replace(/\s/g, '').includes(q.replace(/\s/g, '')) ||
+        w.english.toLowerCase().includes(q)
+      )
+    })
+  }, [gridFilter, gridSearch, allWords, saved])
 
   // Preload next and previous card images
   useEffect(() => {
@@ -433,8 +461,8 @@ export default function Home() {
   )
 
   // LEARN
-    return (
-          <div style={{ display: 'flex', minHeight: '100vh', background: s.bg, justifyContent: 'center' }}>
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', background: s.bg, justifyContent: 'center' }}>
       {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
       {gridOpen && <div onClick={() => setGridOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
 
@@ -512,48 +540,77 @@ export default function Home() {
       </div>
 
       {/* Grid panel */}
-      <div style={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: 320, background: s.card, borderLeft: `1px solid ${s.border}`, zIndex: 20, transform: gridOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.25s ease', padding: '1.5rem', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>
-            All words {hskLevel !== 'all' ? `· HSK ${hskLevel}` : ''}
+      <div style={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: 340, background: s.bg, borderLeft: `1px solid ${s.border}`, zIndex: 20, transform: gridOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.25s ease', display: 'flex', flexDirection: 'column' }}>
+        
+        {/* Header */}
+        <div style={{ padding: '1.5rem 1.5rem 0', flexShrink: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+            <div style={{ fontSize: 22, fontWeight: 700, color: s.text, fontFamily: 'Georgia, serif' }}>Word list</div>
+            <button onClick={() => setGridOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.muted, fontSize: 22, lineHeight: 1 }}>×</button>
           </div>
-          <button onClick={() => setGridOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: s.muted, fontSize: 20 }}>×</button>
+          <div style={{ fontSize: 13, color: s.muted, fontFamily: 'Georgia, serif', marginBottom: 12 }}>
+            {filteredGridWords.filter(w => learned.has(w.id)).length} / {filteredGridWords.length} learned
+          </div>
+
+          {/* Search */}
+          <input
+            type="text"
+            placeholder="Search Chinese, pinyin or English"
+            value={gridSearch}
+            onChange={e => setGridSearch(e.target.value)}
+            style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: `1px solid ${s.border}`, background: s.card, fontSize: 14, color: s.text, fontFamily: 'Georgia, serif', outline: 'none', boxSizing: 'border-box', marginBottom: 10 }}
+          />
+
+          {/* Filter tabs */}
+          <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+            {(['all', 1, 2, 3, 'saved'] as const).map(f => (
+              <button key={String(f)} onClick={() => setGridFilter(f)} style={{ flex: 1, padding: '6px 4px', borderRadius: 8, border: `1px solid ${gridFilter === f ? s.red : s.border}`, background: gridFilter === f ? s.red : s.card, color: gridFilter === f ? '#fff' : s.brown, cursor: 'pointer', fontSize: 12, fontFamily: 'Georgia, serif' }}>
+                {f === 'all' ? 'All' : f === 'saved' ? 'Saved' : `HSK ${f}`}
+              </button>
+            ))}
+          </div>
         </div>
-        <div style={{ fontSize: 11, color: s.lightbrown, marginBottom: 12, fontFamily: 'Georgia, serif' }}>
-          {words.filter(w => learned.has(w.id)).length} / {words.length} learned
-        </div>
-        <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-          {(['chinese', 'pinyin', 'english'] as const).map(view => (
-            <button key={view} onClick={() => setGridView(view)} style={{
-              flex: 1, padding: '6px 4px', borderRadius: 6, border: '1px solid',
-              borderColor: gridView === view ? s.red : s.border,
-              background: gridView === view ? s.red : 'transparent',
-              color: gridView === view ? '#fff' : s.brown,
-              cursor: 'pointer', fontSize: 11, fontFamily: 'Georgia, serif',
-              textTransform: 'capitalize' as const
-            }}>
-              {view}
-            </button>
-          ))}
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
-          {words.map((w, i) => (
-            <button key={w.id} onClick={() => { setCurrent(i); setFlipped(false); setGridOpen(false) }} style={{
-              padding: '10px 4px', borderRadius: 8,
-              border: `1px solid ${learned.has(w.id) ? s.green : s.border}`,
-              background: learned.has(w.id) ? '#f0faf5' : i === current ? '#fdf0ee' : s.bg,
-              cursor: 'pointer', textAlign: 'center' as const,
-              fontFamily: gridView === 'chinese' ? 'serif' : 'Calibri, "Trebuchet MS", "Arial Unicode MS", Georgia, serif',
-              fontSize: 14, color: s.text, fontWeight: 700,
-              overflow: 'hidden', wordBreak: 'break-word' as const
-            }}>
-              {gridView === 'chinese' ? w.chinese : gridView === 'pinyin' ? w.pinyin : w.english}
-            </button>
-          ))}
+
+        {/* Word list */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '0 1rem 1.5rem' }}>
+          <div style={{ background: s.card, borderRadius: 12, border: `1px solid ${s.border}`, overflow: 'hidden' }}>
+            {filteredGridWords.length === 0 ? (
+              <div style={{ padding: '2rem', textAlign: 'center', color: s.muted, fontFamily: 'Georgia, serif', fontSize: 14 }}>
+                {gridFilter === 'saved' && !gridSearch ? 'No saved words yet.' : 'No words match your search.'}
+              </div>
+            ) : filteredGridWords.map((w, i) => {
+              const isWordInList = words.findIndex(ww => ww.id === w.id)
+              return (
+                <div key={w.id}>
+                  <div
+                    onClick={() => {
+                      if (isWordInList >= 0) {
+                        setCurrent(isWordInList)
+                        setFlipped(false)
+                        setGridOpen(false)
+                      }
+                    }}
+                    style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', cursor: isWordInList >= 0 ? 'pointer' : 'default', background: isWordInList === current ? '#fdf0ee' : 'transparent' }}
+                  >
+                    <span style={{ fontSize: 24, fontWeight: 700, color: s.text, minWidth: 60, fontFamily: 'serif' }}>{w.chinese}</span>
+                    <div style={{ flex: 1, marginLeft: 8 }}>
+                      <div style={{ fontSize: 13, color: s.muted, fontFamily: 'Calibri, "Trebuchet MS", sans-serif' }}>{w.pinyin}</div>
+                      <div style={{ fontSize: 13, color: s.text, fontFamily: 'Georgia, serif', marginTop: 2 }}>{w.english}</div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 8 }}>
+                      {saved.find(sv => sv.id === w.id) && <span style={{ color: s.red, fontSize: 14 }}>★</span>}
+                      {learned.has(w.id) && <span style={{ color: s.green, fontSize: 14, fontWeight: 700 }}>✓</span>}
+                    </div>
+                  </div>
+                  {i < filteredGridWords.length - 1 && <div style={{ height: 1, background: s.border, marginLeft: 14 }} />}
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
 
-            <main style={{ flex: 1, maxWidth: 580, width: '100%', margin: '0 auto', padding: '2rem 1.5rem' }}>
+      <main style={{ flex: 1, maxWidth: 580, width: '100%', margin: '0 auto', padding: '2rem 1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem' }}>
           <button onClick={() => setMenuOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: s.brown, padding: '4px 8px 4px 0' }}><IoMenuOutline size={24} /></button>
           <div style={{ flex: 1, textAlign: 'center' }}>
