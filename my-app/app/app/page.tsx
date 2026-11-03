@@ -592,7 +592,7 @@ export default function Home() {
                     }}
                     style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', cursor: isWordInList >= 0 ? 'pointer' : 'default', background: isWordInList === current ? '#fdf0ee' : 'transparent' }}
                   >
-                    <span style={{ fontSize: 24, fontWeight: 700, color: s.text, minWidth: 80, fontFamily: 'serif' }}>{w.chinese}</span>
+                    <span style={{ fontSize: 24, fontWeight: 700, color: s.text, minWidth: 100, fontFamily: 'serif' }}>{w.chinese}</span>
                     <div style={{ flex: 1, marginLeft: 8 }}>
                       <div style={{ fontSize: 13, color: s.muted, fontFamily: 'Calibri, "Trebuchet MS", sans-serif' }}>{w.pinyin}</div>
                       <div style={{ fontSize: 13, color: s.text, fontFamily: 'Georgia, serif', marginTop: 2 }}>{w.english}</div>
