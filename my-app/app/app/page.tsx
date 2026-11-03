@@ -434,7 +434,7 @@ export default function Home() {
 
   // LEARN
     return (
-      <div style={{ display: 'flex', minHeight: '100vh', width: '100vw', background: s.bg, overflow: 'hidden', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', minHeight: '100vh', background: s.bg, justifyContent: 'center' }}>
       {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
       {gridOpen && <div onClick={() => setGridOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
 
@@ -553,7 +553,7 @@ export default function Home() {
         </div>
       </div>
 
-      <main style={{ flex: 1, maxWidth: 580, width: '100%', margin: '0 auto', padding: '2rem 1.5rem', overflowX: 'hidden' }}>
+            <main style={{ flex: 1, maxWidth: 580, width: '100%', margin: '0 auto', padding: '2rem 1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem' }}>
           <button onClick={() => setMenuOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: s.brown, padding: '4px 8px 4px 0' }}><IoMenuOutline size={24} /></button>
           <div style={{ flex: 1, textAlign: 'center' }}>
