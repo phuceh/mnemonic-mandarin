@@ -434,7 +434,7 @@ export default function Home() {
 
   // LEARN
     return (
-      <div style={{ display: 'flex', minHeight: '100vh', background: s.bg, overflow: 'hidden', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', width: '100vw', background: s.bg, overflow: 'hidden', justifyContent: 'center' }}>
       {menuOpen && <div onClick={() => setMenuOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
       {gridOpen && <div onClick={() => setGridOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />}
 
