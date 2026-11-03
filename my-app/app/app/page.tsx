@@ -540,7 +540,7 @@ export default function Home() {
       </div>
 
       {/* Grid panel */}
-      <div style={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: 340, background: s.bg, borderLeft: `1px solid ${s.border}`, zIndex: 20, transform: gridOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.25s ease', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: 380, background: s.bg, borderLeft: `1px solid ${s.border}`, zIndex: 20, transform: gridOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.25s ease', display: 'flex', flexDirection: 'column' }}>
         
         {/* Header */}
         <div style={{ padding: '1.5rem 1.5rem 0', flexShrink: 0 }}>
@@ -592,7 +592,7 @@ export default function Home() {
                     }}
                     style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', cursor: isWordInList >= 0 ? 'pointer' : 'default', background: isWordInList === current ? '#fdf0ee' : 'transparent' }}
                   >
-                    <span style={{ fontSize: 24, fontWeight: 700, color: s.text, minWidth: 60, fontFamily: 'serif' }}>{w.chinese}</span>
+                    <span style={{ fontSize: 24, fontWeight: 700, color: s.text, minWidth: 80, fontFamily: 'serif' }}>{w.chinese}</span>
                     <div style={{ flex: 1, marginLeft: 8 }}>
                       <div style={{ fontSize: 13, color: s.muted, fontFamily: 'Calibri, "Trebuchet MS", sans-serif' }}>{w.pinyin}</div>
                       <div style={{ fontSize: 13, color: s.text, fontFamily: 'Georgia, serif', marginTop: 2 }}>{w.english}</div>
